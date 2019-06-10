@@ -6,7 +6,8 @@
 /* -- Grafo -- */
 
 struct _grafo{
-    usuario *cabeca, *ultimo;
+    usuario *cabeca;
+    usuario *ultimo;
     int qtd_usuarios;
 };
 
@@ -20,10 +21,12 @@ struct _usuario_no{
     char *time;
 
     lista *amizades;
+    lista *pedido_amizade;
     usuario *proximo;
 };
 
 int ultimo_id = 1;
+usuario *usuario_atual = NULL;
 
 grafo *grafoCriar(){
     grafo *g = (grafo*)malloc(sizeof(grafo));
@@ -49,6 +52,12 @@ int grafoVazio(grafo *g){
 void grafoInserirFim(grafo *g, int idade, char *nome, char *cidade, char *genero_filme, char *cor_favorita, char *time){
     usuario *novo = (usuario *) malloc(sizeof(usuario));
     novo->proximo = NULL;
+
+    novo->nome = malloc(strlen(nome));
+    novo->cidade = malloc(strlen(cidade));
+    novo->genero_filme = malloc(strlen(genero_filme));
+    novo->cor_favorita = malloc(strlen(cor_favorita));
+    novo->time = malloc(strlen(time));
 
     // Atribuição das variáveis de um usuário
     novo->id = ultimo_id++;
@@ -94,6 +103,31 @@ void grafoApagar(grafo *g){
         grafoRemoverInicio(g);
     free(g->cabeca);
     free(g);
+}
+
+int grafoBuscarNome(grafo *g, char *nome) {
+    usuario *atual = g->cabeca->proximo;
+    while(atual && strcmp(atual->nome, nome) != 0)
+        atual = atual->proximo;
+    if(!atual) return -1;
+    return atual->id;
+}
+
+void grafoBuscarId(grafo *g, int id) {
+    if(usuario_atual) return;
+    usuario *atual = g->cabeca->proximo;
+    while(atual && atual->id < id)
+        atual = atual->proximo;
+    if(!atual || atual->id > id) {
+        usuario_atual = NULL;
+        return;
+    }
+    usuario_atual = atual;
+    return;
+}
+
+void grafoListarSolicitacoes(grafo *g, int id_usuario_logado) {
+    
 }
 
 /* -- Lista -- */

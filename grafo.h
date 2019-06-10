@@ -9,9 +9,10 @@ typedef int bool;
 typedef struct _grafo grafo;
 typedef struct _usuario_no usuario;
 
-grafo *grafo_criar();
-void grafo_inserir();
-void grafo_apagar();
+grafo *grafoCriar();
+void grafoInserirFim();
+void grafoApagar();
+int grafoBuscarNome(grafo *g, char *nome);
 
 typedef struct LISTA lista;
 typedef struct NOHLISTA nohLista;
