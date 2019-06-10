@@ -70,8 +70,8 @@ void login(grafo *g) {
 
     char *nome;
 
-    printf("Nome do usuário:\n>>");
-    scanf("%ms",&nome); 
+    printf("Nome completo:\n>>");
+    scanf("%m[^\r\n]",&nome); 
     id_usuario_logado = grafoBuscarNome(g,nome);
     if(id_usuario_logado == -1) printf("Usuário inexistente\n");
     else printf("Usuário logado com sucesso\n\n");
@@ -109,6 +109,7 @@ void usuario_home_page(grafo *g) {
     if(!g) return;
 
     int opcao;
+    char *nome;
     while(true) {
         printf("1) Solicitacoes de amizade\n2) Pesquisar usuario\n3) Deslogar\n");
         printf(">>");
@@ -118,7 +119,8 @@ void usuario_home_page(grafo *g) {
                 grafoListarSolicitacoes(g, id_usuario_logado);
             break;
             case 2:
-                
+                scanf("%m[^\r\n]", &nome);
+                grafoBuscarTodosNomes(g, nome);
             break;
             case 3:
                 return;
@@ -133,7 +135,7 @@ void home_page(grafo *g) {
     while(true) {
         printf("1) Cadastrar\n2) Login\n3) Sair\n");
         printf(">>");
-        scanf("%d", &opcao);
+        scanf("%d%*c", &opcao);
         switch(opcao) {
             case 1:
                 cadastrar(g);

@@ -12,6 +12,8 @@ typedef struct _usuario_no usuario;
 grafo *grafoCriar();
 void grafoInserirFim();
 void grafoApagar();
+void grafoListarSolicitacoes(grafo *g, int id_usuario_logado);
+void grafoBuscarTodosNomes(grafo *g, char *nome);
 int grafoBuscarNome(grafo *g, char *nome);
 
 typedef struct LISTA lista;
