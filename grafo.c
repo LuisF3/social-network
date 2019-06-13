@@ -6,7 +6,7 @@
 
 void listaPrintar(lista *l);
 void listaPrintarAfinidade(lista *l);
-usuario *listaRemoverBusca_PosicaoNoFree(lista *l, int posicao);
+usuario *listaRemoverBusca_Posicao(lista *l, int posicao);
 float verificadorAfinidade (usuario *usuario1, usuario *usuario2);
 
 /* -- Grafo -- */
@@ -157,7 +157,7 @@ void grafoListarSolicitacoes(grafo *g) {
         printf("Digite o número do usuário que deseja adicionar ou 0 para continuar\n>>");
         scanf("%d%*c", &escolha);
         if (escolha <= 0) break;
-        usuario *novo_amigo = listaRemoverBusca_PosicaoNoFree(usuario_atual->pedido_amizade, escolha);
+        usuario *novo_amigo = listaRemoverBusca_Posicao(usuario_atual->pedido_amizade, escolha);
         if(listaInserirOrdenado(usuario_atual->amizades, novo_amigo->id, novo_amigo) && listaInserirOrdenado(novo_amigo->amizades, usuario_atual->id, usuario_atual))
             printf("Adicionado com sucesso!\n");
     }
@@ -186,18 +186,53 @@ void grafoBuscarTodosNomes(grafo *g, char *nome) {
         printf("Digite o número do usuário que deseja adicionar ou 0 para continuar\n>>");
         scanf("%d%*c", &escolha);
         if(escolha <= 0) break;
-        usuario *novo_amigo = listaRemoverBusca_PosicaoNoFree(encontrados, escolha);
+        usuario *novo_amigo = listaRemoverBusca_Posicao(encontrados, escolha);
         if(listaInserirOrdenado(novo_amigo->pedido_amizade, usuario_atual->id, usuario_atual))
             printf("Solicitação enviada com sucesso.\n");
     }
     return;  
 }
 
-void grafoListarAmizades(grafo *g){
-    if(!g) return;
+void grafoListarAmizades(){
     listaPrintar(usuario_atual->amizades);
-    printf("\n");
+    printf("==================\n");
     return;
+}
+
+void grafoRemoverAmizades(){
+    int selecao = -1;
+    
+    while(selecao) {
+        if (listaVazia(usuario_atual->amizades))
+        {
+            printf("Sem amigos a se remover \n");
+            return;
+        }
+        listaPrintar(usuario_atual->amizades);
+        printf("Digite o número do usuário que deseja remover ou 0 para continuar\n>>");
+        scanf("%d%*c", &selecao);
+        if(selecao <= 0) break;
+        usuario *novo_amigo = listaRemoverBusca_Posicao(usuario_atual->amizades, selecao);
+        printf("%s Removido com sucesso.\n", novo_amigo->nome);
+    }
+}
+
+void grafoAmizadesIndevidas(){
+    int selecao = -1;
+    lista *amizadesFracas = listaBuscaAmizadesFracas(usuario_atual->amizades);
+    while(selecao) {
+        if (listaVazia(amizadesFracas)){
+            printf("Sem amigos a se remover \n");
+            return;
+        }
+        listaPrintarAfinidade(amizadesFracas);
+        printf("Digite o número do usuário que deseja remover ou 0 para continuar\n>>");
+        scanf("%d%*c", &selecao);
+        if(selecao <= 0) break;
+        usuario *novo_amigo = listaRemoverBusca_Posicao(amizadesFracas, selecao);
+        listaRemoverBusca_id(usuario_atual->amizades, novo_amigo->id);
+        printf("%s Removido com sucesso.\n", novo_amigo->nome);
+    }
 }
 
 float verificadorAfinidade (usuario *usuario1, usuario *usuario2) {
@@ -222,16 +257,19 @@ float verificadorAfinidade (usuario *usuario1, usuario *usuario2) {
     return afinidadeTotal;
 }
 
+
+
 /* -- Lista -- */
 
 struct LISTA{
-    int tamanho;
     nohLista *cabeca;
     nohLista *fim;
+    int tamanho;
 };
 
 struct NOHLISTA{
     int id;
+    float afinidade;
     usuario *amigo;
 
     nohLista *proximo;
@@ -263,10 +301,11 @@ bool listaInserirFim(lista *l, int id, usuario *amigo){
 
     if (!l || !amigo)
         return false;
-    nohLista *novo = (nohLista*)malloc(sizeof(nohLista));
+    nohLista *novo = malloc(sizeof(nohLista));
     novo->proximo = NULL;
     
     novo->id = id;
+    novo->afinidade = -1;
     novo->amigo = amigo;
 
     if(listaVazia(l)) l->cabeca->proximo = novo;
@@ -286,6 +325,7 @@ bool listaInserirOrdenado(lista *l, int id, usuario* amigo){
     novo->proximo = NULL;
     
     novo->id = id;
+    novo->afinidade = -1;
     novo->amigo = amigo;
 
     nohLista *p = l->cabeca;
@@ -320,7 +360,7 @@ void listaRemoverBusca_id (lista *l, int id){
     l->tamanho--;
 }
 
-usuario *listaRemoverBusca_PosicaoNoFree (lista *l, int posicao){
+usuario *listaRemoverBusca_Posicao (lista *l, int posicao){
     if(listaVazia(l)) return NULL;
     nohLista *remover = l->cabeca;
     for (; remover->proximo != NULL && posicao - 1 > 0; posicao--)
@@ -330,7 +370,9 @@ usuario *listaRemoverBusca_PosicaoNoFree (lista *l, int posicao){
     nohLista *aux = remover->proximo;
     remover->proximo = remover->proximo->proximo;
     l->tamanho--;
-    return aux->amigo;
+    usuario *amigo = aux->amigo;
+    free(aux);
+    return amigo;
 }
 
 void listaApagar(lista *l){
@@ -361,4 +403,19 @@ void listaPrintar(lista *l) {
         nol = nol->proximo;
     }
     return;
+}
+
+lista *listaBuscaAmizadesFracas(lista *l){
+    if (!l) return NULL;
+    nohLista *aux = l->cabeca->proximo;
+    lista *amizadesFracas = listaCriar();
+
+
+    while (aux) {
+        if (aux->afinidade < minAmizade)
+            listaInserirOrdenado(amizadesFracas, aux->amigo->id, aux->amigo);
+        aux = aux->proximo;
+    }
+    return amizadesFracas;
+
 }

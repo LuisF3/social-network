@@ -4,6 +4,7 @@
 #define true 1
 #define false 0
 #define erro -1
+#define minAmizade 0.5
 typedef int bool;
 
 typedef struct _grafo grafo;
@@ -17,7 +18,10 @@ void grafoBuscarTodosNomes(grafo *g, char *nome);
 int grafoBuscarNome(grafo *g, char *nome);
 void grafoLogin(grafo *g, int id);
 void grafoLogout();
-void grafoListarAmizades(grafo *g);
+void grafoListarAmizades();
+void grafoRemoverAmizades();
+void grafoAmizadesIndevidas();
+
 
 typedef struct LISTA lista;
 typedef struct NOHLISTA nohLista;
@@ -71,5 +75,7 @@ int listaVazia(lista *l);
 * @param l: ponteiro da lista que será apagada
 */
 void listaApagar(lista *l);
+lista *listaBuscaAmizadesFracas(lista *l);
+void listaRemoverBusca_id (lista *l, int id);
 
 #endif
