@@ -12,9 +12,12 @@ typedef struct _usuario_no usuario;
 grafo *grafoCriar();
 void grafoInserirFim();
 void grafoApagar();
-void grafoListarSolicitacoes(grafo *g, int id_usuario_logado);
+void grafoListarSolicitacoes(grafo *g);
 void grafoBuscarTodosNomes(grafo *g, char *nome);
 int grafoBuscarNome(grafo *g, char *nome);
+void grafoLogin(grafo *g, int id);
+void grafoLogout();
+void grafoListarAmizades(grafo *g);
 
 typedef struct LISTA lista;
 typedef struct NOHLISTA nohLista;
@@ -32,7 +35,7 @@ lista *listaCriar();
 * @param usuario: conteúdo do novo nó
 * @param l: ponteiro da lista em que o nó será posicionado
 */
-void listaInserirOrdenado(lista *l, int id, usuario *amigo);
+bool listaInserirOrdenado(lista *l, int id, usuario *amigo);
 
 /*
 * Insere no fim da lista.
@@ -40,7 +43,7 @@ void listaInserirOrdenado(lista *l, int id, usuario *amigo);
 * @param usuario: conteúdo do novo nó
 * @param l: ponteiro da lista em que o nó será posicionado
 */
-void listaInserirFim(lista *l, int id, usuario *amigo);
+bool listaInserirFim(lista *l, int id, usuario *amigo);
 
 /*
 * Remove o nó inicial da lista e retorna o seu conteúdo.

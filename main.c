@@ -71,12 +71,16 @@ void login(grafo *g) {
     char *nome;
 
     printf("Nome completo:\n>>");
-    scanf("%m[^\r\n]",&nome); 
+    scanf("%m[^\r\n]%*c",&nome); 
     id_usuario_logado = grafoBuscarNome(g,nome);
     if(id_usuario_logado == -1) printf("Usuário inexistente\n");
     else printf("Usuário logado com sucesso\n\n");
 
     free(nome);
+}
+
+void logout(){
+    id_usuario_logado = -1;
 }
 
 void titulo() {
@@ -107,21 +111,27 @@ void titulo() {
 
 void usuario_home_page(grafo *g) {
     if(!g) return;
-
     char opcao, *nome;
     while(true) {
-        printf("1) Solicitacoes de amizade\n2) Pesquisar usuario\n3) Deslogar\n");
+        printf("1) Solicitacoes de amizade\n2) Pesquisar usuario\n3) Listar Amizades\n4) Deslogar\n");
         printf(">>");
         scanf("%c%*c", &opcao);
         switch(opcao) {
             case '1':
-                grafoListarSolicitacoes(g, id_usuario_logado);
+                grafoListarSolicitacoes(g);
             break;
             case '2':
-                scanf("%m[^\r\n]", &nome);
+                printf(">>");
+                scanf("%m[^\r\n]%*c", &nome);
                 grafoBuscarTodosNomes(g, nome);
             break;
             case '3':
+                grafoListarAmizades(g);
+            break;
+            case '4':
+                logout();
+                grafoLogout();
+                printf("Usuário deslogado com sucesso.\n");
                 return;
             break;
             default:
@@ -144,10 +154,12 @@ void home_page(grafo *g) {
             break;
             case '2':
                 login(g);
+                grafoLogin(g, id_usuario_logado);
                 if(id_usuario_logado != -1)
                     usuario_home_page(g);
             break;
             case '3':
+                system("tput reset");
                 return;
             break;
             default:
