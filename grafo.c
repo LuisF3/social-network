@@ -79,6 +79,8 @@ void grafoInserirFim(grafo *g, int idade, char *nome, char *cidade, char *genero
     strcpy(novo->genero_filme, genero_filme);
     strcpy(novo->cor_favorita, cor_favorita);
     strcpy(novo->time, time);
+    novo->amizades = listaCriar();
+    novo->pedido_amizade = listaCriar();
 
     if(grafoVazio(g)) g->cabeca->proximo = novo;
     else g->ultimo->proximo = novo;
@@ -142,8 +144,10 @@ void grafoListarSolicitacoes(grafo *g, int id_usuario_logado) {
     if(!g || id_usuario_logado == -1) return;
     grafoBuscarId(g, id_usuario_logado);
     if (usuario_atual) {
-        if (listaVazia(usuario_atual->pedido_amizade))
-            printf("Nenhuma solicitacao");
+        if (listaVazia(usuario_atual->pedido_amizade)){
+            printf("Nenhuma solicitacao\n");
+            return;
+        }
         else
             listaPrintar(usuario_atual->pedido_amizade);
     }
@@ -173,6 +177,10 @@ void grafoBuscarTodosNomes(grafo *g, char *nome) {
             atual = atual->proximo;
             i++;
         }
+    }
+    if (i == 1) {
+        printf("A pesquisa retornou 0 resultados.\n");
+        return;
     }
     
     int escolha;
@@ -241,6 +249,8 @@ lista *listaCriar(){
 }
 
 int listaVazia(lista *l){
+    if (!l)
+        return 1;
     return l->tamanho == 0;
 }
 

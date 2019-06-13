@@ -108,22 +108,24 @@ void titulo() {
 void usuario_home_page(grafo *g) {
     if(!g) return;
 
-    int opcao;
-    char *nome;
+    char opcao, *nome;
     while(true) {
         printf("1) Solicitacoes de amizade\n2) Pesquisar usuario\n3) Deslogar\n");
         printf(">>");
-        scanf("%d", &opcao);
+        scanf("%c%*c", &opcao);
         switch(opcao) {
-            case 1:
+            case '1':
                 grafoListarSolicitacoes(g, id_usuario_logado);
             break;
-            case 2:
+            case '2':
                 scanf("%m[^\r\n]", &nome);
                 grafoBuscarTodosNomes(g, nome);
             break;
-            case 3:
+            case '3':
                 return;
+            break;
+            default:
+                printf("Opção inválida\n");
         }
     }
 }
@@ -131,22 +133,25 @@ void usuario_home_page(grafo *g) {
 void home_page(grafo *g) {
     if(!g) return;
 
-    int opcao;
+    char opcao;
     while(true) {
         printf("1) Cadastrar\n2) Login\n3) Sair\n");
         printf(">>");
-        scanf("%d%*c", &opcao);
+        scanf("%c%*c", &opcao);
         switch(opcao) {
-            case 1:
+            case '1':
                 cadastrar(g);
             break;
-            case 2:
+            case '2':
                 login(g);
                 if(id_usuario_logado != -1)
                     usuario_home_page(g);
             break;
-            case 3:
+            case '3':
                 return;
+            break;
+            default:
+                printf("Opção inválida\n");
         }
     }
 }
