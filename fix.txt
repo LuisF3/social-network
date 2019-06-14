@@ -1,0 +1,2 @@
+Impedir que uma pessoa se adicione como amigo
+Impedir que uma pessoa adicione outra duas vezes

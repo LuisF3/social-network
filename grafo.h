@@ -4,7 +4,7 @@
 #define true 1
 #define false 0
 #define erro -1
-#define minAmizade 0.5
+#define minAmizade 50.0
 typedef int bool;
 
 typedef struct _grafo grafo;

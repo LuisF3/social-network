@@ -205,7 +205,7 @@ void grafoRemoverAmizades(){
     while(selecao) {
         if (listaVazia(usuario_atual->amizades))
         {
-            printf("Sem amigos a se remover \n");
+            printf("Sem amigos a se remover.\n");
             return;
         }
         listaPrintar(usuario_atual->amizades);
@@ -213,7 +213,7 @@ void grafoRemoverAmizades(){
         scanf("%d%*c", &selecao);
         if(selecao <= 0) break;
         usuario *novo_amigo = listaRemoverBusca_Posicao(usuario_atual->amizades, selecao);
-        printf("%s Removido com sucesso.\n", novo_amigo->nome);
+        printf("%s removido com sucesso.\n", novo_amigo->nome);
     }
 }
 
@@ -256,8 +256,6 @@ float verificadorAfinidade (usuario *usuario1, usuario *usuario2) {
         return 100;
     return afinidadeTotal;
 }
-
-
 
 /* -- Lista -- */
 
