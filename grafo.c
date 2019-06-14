@@ -36,6 +36,9 @@ struct _usuario_no{
     lista *amizades;
     lista *pedido_amizade;
     usuario *proximo;
+    bool visitado;
+    int tempo_encontro;
+    int low;
 };
 
 int ultimo_id = 1;
@@ -235,7 +238,7 @@ void grafoAmizadesIndevidas(){
     }
 }
 
-float verificadorAfinidade (usuario *usuario1, usuario *usuario2) {
+float verificadorAfinidade (usuario *usuario1, usuario *usuario2){
     if (!usuario1 || !usuario2) return -1;
     //VERIFICAR AMIZADES EM COMUM
     float afinidadeTotal = 100.0;
@@ -255,6 +258,21 @@ float verificadorAfinidade (usuario *usuario1, usuario *usuario2) {
     if (afinidadeTotal >= 100)
         return 100;
     return afinidadeTotal;
+}
+
+void grafoRecomendacoes(){
+    if(listaVazia(usuario_atual->amizades)) {
+        printf("Adicione alguns amigos antes de tentar essa funcionalidade!");
+        return;
+    }
+
+    int counter = 0;
+    DFS(usuario_atual,&counter);
+}
+
+lista *tarjan(usuario *atual){
+    int counter = 0;
+    DFS(atual,&counter);
 }
 
 /* -- Lista -- */
@@ -295,8 +313,26 @@ int listaVazia(lista *l){
     return l->tamanho == 0;
 }
 
-bool listaInserirFim(lista *l, int id, usuario *amigo){
+bool listaInserirInicio(lista *l, int id, usuario *amigo){
 
+    if (!l || !amigo)
+        return false;
+    nohLista *novo = malloc(sizeof(nohLista));
+    novo->proximo = NULL;
+    
+    novo->id = id;
+    novo->afinidade = -1;
+    novo->amigo = amigo;
+
+    if(listaVazia(l)) l->fim = novo;
+    else novo->proximo = l->cabeca->proximo;
+    l->cabeca->proximo = novo;
+
+    l->tamanho++;
+    return true;
+}
+
+bool listaInserirFim(lista *l, int id, usuario *amigo){
     if (!l || !amigo)
         return false;
     nohLista *novo = malloc(sizeof(nohLista));
@@ -336,13 +372,20 @@ bool listaInserirOrdenado(lista *l, int id, usuario* amigo){
     return true;
 }
 
-void listaRemoverInicio(lista *l){
-    if(listaVazia(l)) return;
+usuario *listaRemoverInicio(lista *l){
+    if(listaVazia(l)) return NULL;
     nohLista *remover = l->cabeca->proximo;
     l->cabeca->proximo = remover->proximo;
     if(l->tamanho == 1) l->fim = NULL;
+    usuario *removido = remover->amigo;
     free(remover);
     l->tamanho--;
+    return removido;
+}
+
+usuario *listaInicio(lista *l) {
+    if (!l) return NULL;
+    return l->cabeca->proximo->amigo;
 }
 
 void listaRemoverBusca_id (lista *l, int id){
@@ -416,4 +459,20 @@ lista *listaBuscaAmizadesFracas(lista *l){
     }
     return amizadesFracas;
 
+}
+
+void DFS(usuario *user, int *counter){
+    if(user->visitado)
+        return;
+    
+    printf(">>Visitando %s\n",user->nome);
+
+    user->visitado = true;
+    user->tempo_encontro = *counter;
+    *counter += 1;
+    nohLista *atual = user->amizades->cabeca->proximo;
+    while(atual){
+        DFS(atual->amigo, counter);
+        atual = atual->proximo;
+    }
 }

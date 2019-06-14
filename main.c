@@ -113,7 +113,7 @@ void usuario_home_page(grafo *g) {
     if(!g) return;
     char opcao, *nome;
     while(true) {
-        printf("1) Solicitacoes de amizade\n2) Pesquisar usuario\n3) Listar Amizades\n4) Remover amigo\n5) Amizades Fracas\n6) Deslogar\n");
+        printf("1) Solicitações de amizade\n2) Pesquisar usuário\n3) Listar amizades\n4) Remover amigo\n5) Amizades fracas\n6) Recomendações de amigos\n7) Deslogar\n");
         printf(">>");
         scanf("%c%*c", &opcao);
         switch(opcao) {
@@ -135,6 +135,9 @@ void usuario_home_page(grafo *g) {
                 grafoAmizadesIndevidas();
             break;
             case '6':
+                grafoRecomendacoes();
+            break;
+            case '7':
                 logout();
                 grafoLogout();
                 printf("Usuário deslogado com sucesso.\n");

@@ -21,7 +21,8 @@ void grafoLogout();
 void grafoListarAmizades();
 void grafoRemoverAmizades();
 void grafoAmizadesIndevidas();
-
+void grafoRecomendacoes();
+void DFS(usuario *user, int *counter);
 
 typedef struct LISTA lista;
 typedef struct NOHLISTA nohLista;
@@ -53,7 +54,7 @@ bool listaInserirFim(lista *l, int id, usuario *amigo);
 * Remove o nó inicial da lista e retorna o seu conteúdo.
 * @param l: ponteiro da lista que terá seu componente desalocado 
 */
-void listaRemoverInicio(lista *l);
+usuario *listaRemoverInicio(lista *l);
 
 /*
 * Remove o elemento cujas especificações sejam iguais aos valores de comparação
