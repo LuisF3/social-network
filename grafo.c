@@ -178,7 +178,7 @@ void grafoBuscarTodosNomes(grafo *g, char *nome) {
     usuario *atual = g->cabeca->proximo;
     lista *encontrados = listaCriar();
     while(atual) {
-        if(strncmp(strToLower(atual->nome), strToLower(nome), strlen(nome) < strlen(atual->nome) ? strlen(nome) : strlen(atual->nome)) == 0 && strcmp(usuario_atual->nome, atual->nome))
+        if(strncmp(strToLower(atual->nome), strToLower(nome), strlen(nome) < strlen(atual->nome) ? strlen(nome) : strlen(atual->nome)) == 0 && strcmp(usuario_atual->nome, atual->nome) && !listaIsNaLista(usuario_atual->amizades, atual->id))
             listaInserirFim(encontrados, atual->id, atual);
         atual = atual->proximo;
     }
@@ -193,9 +193,14 @@ void grafoBuscarTodosNomes(grafo *g, char *nome) {
         printf("Digite o número do usuário que deseja adicionar ou 0 para continuar\n>>");
         scanf("%d%*c", &escolha);
         if(escolha <= 0) break;
-        usuario *novo_amigo = listaRemoverBusca_Posicao(encontrados, escolha);
-        if(listaInserirOrdenado(novo_amigo->pedido_amizade, usuario_atual->id, usuario_atual))
-            printf("Solicitação enviada com sucesso.\n");
+        if (escolha > listaTamanho(encontrados))
+        {
+            printf("Entrada de Valor Invalido !\n");
+        }else{
+            usuario *novo_amigo = listaRemoverBusca_Posicao(encontrados, escolha);
+            if (listaInserirOrdenado(novo_amigo->pedido_amizade, usuario_atual->id, usuario_atual))
+                printf("Solicitação enviada com sucesso.\n");
+        }
     }
     return;  
 }
@@ -470,8 +475,32 @@ lista *listaBuscaAmizadesFracas(lista *l){
         aux = aux->proximo;
     }
     return amizadesFracas;
-
 }
+
+bool listaIsNaLista(lista *l, int id){
+    if (!l) return false;
+    nohLista *aux =  l->cabeca->proximo;
+
+    while (aux)
+    {
+        if (aux->id == id) return true;
+        aux = aux->proximo;
+    }
+    return false;
+}
+
+int listaTamanho(lista *l){
+    if (!l)return 0;
+    nohLista *aux = l->cabeca->proximo;
+    int counter = 0;
+    while (aux)
+    {
+        counter++;
+        aux = aux->proximo;
+    }
+    return counter;
+}
+
 
 void DFS(usuario *user, int *counter){
     if(user->visitado)
