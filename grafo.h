@@ -4,7 +4,7 @@
 #define true 1
 #define false 0
 #define erro -1
-#define minAmizade 50.0
+#define minAmizade 50.0 //valor mínino de afinidade para considerar uma amizade como verdadeira
 typedef int bool;
 
 typedef struct _grafo grafo;
@@ -68,7 +68,7 @@ void grafoLogout();
 void grafoListarAmizades();
 
 /*
-*
+* Remove uma ou mais pessoas da lista de amizades.
 */
 void grafoRemoverAmizades();
 
@@ -83,8 +83,8 @@ void grafoAmizadesIndevidas();
 void grafoRecomendacoes();
 
 /*
-*
-* @param g:
+* Estabelece relações entre os usuários aleatoriamente.
+* @param g: grafo das pessoas cadastradas no sistema
 */
 void grafoAdicionarTodos(grafo *g);
 
@@ -144,10 +144,42 @@ int listaVazia(lista *l);
 * @param l: ponteiro da lista que será apagada
 */
 void listaApagar(lista *l);
+
+/*
+*
+* @param l:
+* @return lista*:
+*/
 lista *listaBuscaAmizadesFracas(lista *l);
-usuario *listaBusca_id (lista *l, int id);
-void listaRemoverBusca_id (lista *l, int id);
+
+/*
+*
+* @param l:
+* @param id:
+* @return usuario*:
+*/
+usuario *listaBusca_id(lista *l, int id);
+
+/*
+*
+* @param l:
+* @param id:
+*/
+void listaRemoverBusca_id(lista *l, int id);
+
+/*
+*
+* @param l:
+* @param id:
+* @return bool:
+*/
 bool listaIsNaLista(lista *l, int id);
+
+/*
+* Retorna o número de contatos presentes na lista de amizades.
+* @param l: lista sobre a qual será realizada a operação
+* @return int: número de elementos da lista
+*/
 int listaTamanho(lista *l); 
 
 #endif

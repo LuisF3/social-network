@@ -16,7 +16,7 @@ void DFS(usuario *user, int *counter);
     recebe uma string e retorna uma cópia com todos os caractéres em minúsculo
     str - string 
 */
-char *strToLower(char *str) {
+char *strToLower(char *str){
     char *copia = malloc(strlen(str) * sizeof(char));
     for (int i = 0; i < strlen(str); i++)
         copia[i] = tolower(str[i]);
@@ -128,7 +128,7 @@ void grafoApagar(grafo *g){
     free(g);
 }
 
-int grafoBuscarNome(grafo *g, char *nome) {
+int grafoBuscarNome(grafo *g, char *nome){
     usuario *atual = g->cabeca->proximo;
     while(atual && strcmp(atual->nome, nome) != 0)
         atual = atual->proximo;
@@ -136,7 +136,7 @@ int grafoBuscarNome(grafo *g, char *nome) {
     return atual->id;
 }
 
-void grafoLogin(grafo *g, int id) {
+void grafoLogin(grafo *g, int id){
     if(usuario_atual) return;
     usuario *atual = g->cabeca->proximo;
     while(atual && atual->id < id)
@@ -149,11 +149,11 @@ void grafoLogin(grafo *g, int id) {
     return;
 }
 
-void grafoLogout() {
+void grafoLogout(){
     usuario_atual = NULL;
 }
 
-void grafoListarSolicitacoes(grafo *g) {
+void grafoListarSolicitacoes(grafo *g){
     if(!g) return;
     int escolha;
     while (usuario_atual) {
@@ -173,7 +173,7 @@ void grafoListarSolicitacoes(grafo *g) {
     return;
 }
 
-void grafoBuscarTodosNomes(grafo *g, char *nome) {
+void grafoBuscarTodosNomes(grafo *g, char *nome){
     if (!g || !nome) return;
     
     usuario *atual = g->cabeca->proximo;
@@ -216,9 +216,8 @@ void grafoRemoverAmizades(){
     int selecao = -1;
     
     while(selecao) {
-        if (listaVazia(usuario_atual->amizades))
-        {
-            printf("Sem amigos a se remover.\n");
+        if (listaVazia(usuario_atual->amizades)){
+            printf("Sem amigos para remover.\n");
             return;
         }
         listaPrintar(usuario_atual->amizades);
@@ -285,16 +284,16 @@ lista *tarjan(usuario *atual){
     DFS(atual, &counter);
 }
 
-void grafoAdicionarTodos(grafo *g) {
-    if (!g) return;
+void grafoAdicionarTodos(grafo *g){
+    if(!g) return;
     //Iterar pelo grafo
     usuario *atual = g->cabeca->proximo;
     while(atual) {
         //Iterar pelo grafo novamente
         usuario *atual2 = atual->proximo;
-        while (atual2){
+        while(atual2){
             // sorteia se o vai adicionar a pessoa ou não
-            if (rand() % 10 < 5) {
+            if(rand() % 10 < 5) {
                 listaInserirOrdenado(atual->amizades, atual2->id, atual2);
                 listaInserirOrdenado(atual2->amizades, atual->id, atual);
             }
@@ -425,7 +424,7 @@ usuario *listaInicio(lista *l) {
     return l->cabeca->proximo->amigo;
 }
 
-void listaRemoverBusca_id (lista *l, int id){
+void listaRemoverBusca_id(lista *l, int id){
     if(listaVazia(l)) return;
     nohLista *remover = l->cabeca;
     while(remover->proximo != NULL && remover->proximo->id < id)
@@ -438,7 +437,7 @@ void listaRemoverBusca_id (lista *l, int id){
     l->tamanho--;
 }
 
-usuario *listaRemoverBusca_Posicao (lista *l, int posicao){
+usuario *listaRemoverBusca_Posicao(lista *l, int posicao){
     if(listaVazia(l)) return NULL;
     nohLista *remover = l->cabeca;
     for (; remover->proximo != NULL && posicao - 1 > 0; posicao--)
@@ -461,7 +460,7 @@ void listaApagar(lista *l){
     free(l);
 }
 
-void listaPrintarAfinidade(lista *l) {
+void listaPrintarAfinidade(lista *l){
     if (!l) return;
     nohLista *nol = l->cabeca->proximo;
     int i = 1;
@@ -472,7 +471,7 @@ void listaPrintarAfinidade(lista *l) {
     return;
 }
 
-void listaPrintar(lista *l) {
+void listaPrintar(lista *l){
     if (!l) return;
     nohLista *nol = l->cabeca->proximo;
     int i = 1;
@@ -483,7 +482,7 @@ void listaPrintar(lista *l) {
     return;
 }
 
-usuario *listaBusca_id (lista *l, int id){
+usuario *listaBusca_id(lista *l, int id){
     if(listaVazia(l)) return NULL;
     nohLista *busca = l->cabeca->proximo;
     while(busca && busca->id < id)

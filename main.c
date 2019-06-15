@@ -5,7 +5,7 @@
 int debug = 0;
 int id_usuario_logado = -1;
 
-void arquivo_ler(grafo *g) {
+void arquivo_ler(grafo *g){
     if(!g) return;
     FILE *fp = fopen("1.in", "r");
 
@@ -31,18 +31,21 @@ void arquivo_ler(grafo *g) {
     fclose(fp);
 }
 
-void cadastrar(grafo *g) {
+void cadastrar(grafo *g){
     if(!g) return;
 
-    int idade;
+    int idade = 0;
     char *nome;
     char *cidade;
     char *genero_filme;
     char *cor_favorita;
     char *time;
 
-    printf("Idade:\n>>");
-    scanf("%d%*c", &idade);
+    while(idade < 10) {
+        printf("Idade:\n>>");
+        scanf("%d%*c", &idade);
+        if(idade < 10) printf("Cadastro proibido para menores de 10 anos.\n");
+    }
     printf("Nome completo:\n>>");
     scanf("%m[^\n\r]%*c", &nome);
     printf("Cidade:\n>>");
@@ -65,7 +68,7 @@ void cadastrar(grafo *g) {
     free(time);
 }
 
-void login(grafo *g) {
+void login(grafo *g){
     if(!g) return;
 
     char *nome;
@@ -83,7 +86,7 @@ void logout(){
     id_usuario_logado = -1;
 }
 
-void titulo() {
+void titulo(){
     // Logo escrito em ascii. Disponível no site http://www.network-science.de/ascii/, fonte "smisome1"
     printf("   ___       ___       ___       ___       ___       ___            ___       ___                           \n");
     printf("  /\\  \\     /\\__\\     /\\  \\     /\\  \\     /\\  \\     /\\  \\          /\\__\\     /\\__\\          \n");
@@ -109,7 +112,7 @@ void titulo() {
     printf("====================================================================================\n\n");
 }
 
-void usuario_home_page(grafo *g) {
+void usuario_home_page(grafo *g){
     if(!g) return;
     char opcao, *nome;
     while(true) {
@@ -159,7 +162,7 @@ void usuario_home_page(grafo *g) {
     }
 }
 
-void home_page(grafo *g) {
+void home_page(grafo *g){
     if(!g) return;
 
     char opcao;
@@ -193,7 +196,7 @@ void home_page(grafo *g) {
     }
 }
 
-int main(int argc, char const *argv[]) {
+int main(int argc, char const *argv[]){
     titulo();
     grafo *g = grafoCriar();
     arquivo_ler(g);
