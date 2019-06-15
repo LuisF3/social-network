@@ -24,8 +24,8 @@ char *strToLower(char *str) {
 }
 
 struct _grafo{
-    usuario *ultimo;    // ultimo termo da lista encadeada
-    usuario *cabeca;    // inicio da lista encadeada
+    usuario *ultimo;    // último termo da lista encadeada
+    usuario *cabeca;    // início da lista encadeada
     int qtd_usuarios;   // quantidade de elementos presentes no grafo
 };
 
@@ -38,16 +38,16 @@ struct _usuario_no{
     char *cor_favorita;
     char *time;
 
-    usuario *proximo;       // proximo no encademento do grafo
-    lista *amizades;        // amizades que o individuo tem
-    lista *pedido_amizade;  // solicitaçoes de amizades
-    bool visitado;          // boolean que serve para verificar se o nó já foi viziado 
-    int tempo_encontro;     // tempo de encontro do no 
+    usuario *proximo;       // próximo no encademento do grafo
+    lista *amizades;        // amizades do indivíduo
+    lista *pedido_amizade;  // solicitações de amizades
+    bool visitado;          // booleano que serve para verificar se o nó já foi visitado 
+    int tempo_encontro;     // tempo de encontro do nó 
     int low;                // low utilizado no Tarjan
 };
 
-int ultimo_id = 1;
-usuario *usuario_atual = NULL;
+int ultimo_id = 1;                 // contador para atribuição do código de identificação de um novo usuário
+usuario *usuario_atual = NULL;     // ponteiro para o usuário atualmente autenticado no sistema
 
 grafo *grafoCriar(){
     grafo *g = (grafo*)malloc(sizeof(grafo));
@@ -191,13 +191,12 @@ void grafoBuscarTodosNomes(grafo *g, char *nome) {
             return;
         }
         listaPrintarAfinidade(encontrados);
-        printf("Digite o número do usuário que deseja adicionar ou 0 para continuar\n>>");
+        printf("Digite o número do usuário que deseja adicionar ou 0 para continuar.\n>>");
         scanf("%d%*c", &escolha);
         if(escolha <= 0) break;
-        if (escolha > listaTamanho(encontrados))
-        {
-            printf("Entrada de Valor Invalido !\n");
-        }else{
+        if(escolha > listaTamanho(encontrados))
+            printf("Entrada de valor inválido.\n");
+        else{
             usuario *novo_amigo = listaRemoverBusca_Posicao(encontrados, escolha);
             if (listaInserirOrdenado(novo_amigo->pedido_amizade, usuario_atual->id, usuario_atual))
                 printf("Solicitação enviada com sucesso.\n");
@@ -207,6 +206,7 @@ void grafoBuscarTodosNomes(grafo *g, char *nome) {
 }
 
 void grafoListarAmizades(){
+    printf("==================\n");
     listaPrintar(usuario_atual->amizades);
     printf("==================\n");
     return;
