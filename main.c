@@ -113,7 +113,17 @@ void usuario_home_page(grafo *g) {
     if(!g) return;
     char opcao, *nome;
     while(true) {
-        printf("1) Solicitações de amizade\n2) Pesquisar usuário\n3) Listar amizades\n4) Remover amigo\n5) Amizades fracas\n6) Recomendações de amigos\n7) Deslogar\n");
+        printf("+-------------------------------+\n");
+        printf("|       Página do usuário       |\n");
+        printf("+-------------------------------+\n");
+        printf("| 1) Solicitações de amizade    |\n");
+        printf("| 2) Pesquisar usuário          |\n");
+        printf("| 3) Listar amizades            |\n");
+        printf("| 4) Remover amigo              |\n");
+        printf("| 5) Amizades fracas            |\n");
+        printf("| 6) Recomendações de amigos    |\n");
+        printf("| 7) Deslogar                   |\n");
+        printf("+-------------------------------+\n");
         printf(">>");
         scanf("%c%*c", &opcao);
         switch(opcao) {
@@ -154,7 +164,13 @@ void home_page(grafo *g) {
 
     char opcao;
     while(true) {
-        printf("1) Cadastrar\n2) Login\n3) Sair\n");
+        printf("+----------------------+\n");
+        printf("|         Menu         |\n");
+        printf("+----------------------+\n");
+        printf("| 1) Cadastrar         |\n");
+        printf("| 2) Login             |\n");
+        printf("| 3) Sair              |\n");
+        printf("+----------------------+\n");
         printf(">>");
         scanf("%c%*c", &opcao);
         switch(opcao) {

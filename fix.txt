@@ -1,2 +1,4 @@
-Impedir que uma pessoa se adicione como amigo
-Impedir que uma pessoa adicione outra duas vezes
+1) - Impedir que uma pessoa se adicione como amigo                   - OK
+2) - Impedir que uma pessoa adicione outra duas vezes                - OK
+3) - Permitir entrada de numeros menores que 10 na idade
+4) - Entrada de Opções inválidas só buga, tipo input de string en inteiro
