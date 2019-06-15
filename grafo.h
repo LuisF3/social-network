@@ -9,6 +9,7 @@ typedef int bool;
 
 typedef struct _grafo grafo;
 typedef struct _usuario_no usuario;
+typedef struct _cidade cidade;
 
 void grafoEncontrarNamorado();
 

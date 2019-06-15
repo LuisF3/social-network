@@ -25,17 +25,25 @@ char *strToLower(char *str){
     return copia;
 }
 
+struct _cidade{
+    char nome[64];
+    char estado[2];
+    float latitude;
+    float longitude;
+};
+
 struct _grafo{
-    usuario *ultimo;    // último termo da lista encadeada
-    usuario *cabeca;    // início da lista encadeada
-    int qtd_usuarios;   // quantidade de elementos presentes no grafo
+    usuario *ultimo;            // último termo da lista encadeada
+    usuario *cabeca;            // início da lista encadeada
+    int qtd_usuarios;           // quantidade de elementos presentes no grafo
+    cidade todas_cidades[5560]; // conjunto com os dados de todas as cidades do Brasil
 };
 
 struct _usuario_no{
     int id;             //identificador do usuário
     int idade;
     char *nome;
-    char *cidade;
+    cidade cidade_info;
     char *genero_filme;
     char *cor_favorita;
     char *time;
@@ -47,6 +55,18 @@ struct _usuario_no{
 
 int ultimo_id = 1;                 // contador para atribuição do código de identificação de um novo usuário
 usuario *usuario_atual = NULL;     // ponteiro para o usuário atualmente autenticado no sistema
+
+void arquivoCidadesLer(grafo *g){
+    FILE *fp = fopen("cidades.csv","r");
+    int pos = 0;
+
+    while(!feof(fp)){
+        fscanf(fp,"%[^,]%*c%[^,]%*c%[^,]%*c%f%*c%f", g->todas_cidades[pos].estado, g->todas_cidades[pos].nome, &(g->todas_cidades[pos].latitude), &(g->todas_cidades[pos].longitude));
+        pos++;
+    }
+
+    fclose(fp); 
+}
 
 grafo *grafoCriar(){
     grafo *g = (grafo*)malloc(sizeof(grafo));
@@ -62,6 +82,8 @@ grafo *grafoCriar(){
     g->cabeca->proximo = NULL;
     g->qtd_usuarios = 0;
 
+    arquivoCidadesLer(g);
+
     return g;
 }
 
@@ -69,12 +91,11 @@ int grafoVazio(grafo *g){
     return g->qtd_usuarios == 0;
 }
 
-void grafoInserirFim(grafo *g, int idade, char *nome, char *cidade, char *genero_filme, char *cor_favorita, char *time){
+void grafoInserirFim(grafo *g, int idade, char *nome, char *nome_cidade, char *estado,float latitude, float longitude, char *genero_filme, char *cor_favorita, char *time){
     usuario *novo = (usuario *) malloc(sizeof(usuario));
     novo->proximo = NULL;
 
     novo->nome = malloc(strlen(nome));
-    novo->cidade = malloc(strlen(cidade));
     novo->genero_filme = malloc(strlen(genero_filme));
     novo->cor_favorita = malloc(strlen(cor_favorita));
     novo->time = malloc(strlen(time));
@@ -83,7 +104,12 @@ void grafoInserirFim(grafo *g, int idade, char *nome, char *cidade, char *genero
     novo->id = ultimo_id++;
     novo->idade = idade;
     strcpy(novo->nome, nome);
-    strcpy(novo->cidade, cidade);
+
+    strcpy(novo->cidade_info.nome, nome_cidade);
+    strcpy(novo->cidade_info.estado, estado);
+    novo->cidade_info.latitude = latitude;
+    novo->cidade_info.longitude = longitude;
+
     strcpy(novo->genero_filme, genero_filme);
     strcpy(novo->cor_favorita, cor_favorita);
     strcpy(novo->time, time);
