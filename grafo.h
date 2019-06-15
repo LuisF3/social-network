@@ -22,7 +22,7 @@ void grafoListarAmizades();
 void grafoRemoverAmizades();
 void grafoAmizadesIndevidas();
 void grafoRecomendacoes();
-void DFS(usuario *user, int *counter);
+void grafoAdicionarTodos(grafo *g);
 
 typedef struct LISTA lista;
 typedef struct NOHLISTA nohLista;
@@ -77,6 +77,7 @@ int listaVazia(lista *l);
 */
 void listaApagar(lista *l);
 lista *listaBuscaAmizadesFracas(lista *l);
+usuario *listaBusca_id (lista *l, int id);
 void listaRemoverBusca_id (lista *l, int id);
 
 #endif

@@ -8,6 +8,7 @@ void listaPrintar(lista *l);
 void listaPrintarAfinidade(lista *l);
 usuario *listaRemoverBusca_Posicao(lista *l, int posicao);
 float verificadorAfinidade (usuario *usuario1, usuario *usuario2);
+void DFS(usuario *user, int *counter);
 
 /* -- Grafo -- */
 
@@ -267,12 +268,31 @@ void grafoRecomendacoes(){
     }
 
     int counter = 0;
-    DFS(usuario_atual,&counter);
+    DFS(usuario_atual, &counter);
 }
 
 lista *tarjan(usuario *atual){
     int counter = 0;
-    DFS(atual,&counter);
+    DFS(atual, &counter);
+}
+
+void grafoAdicionarTodos(grafo *g) {
+    if (!g) return;
+    //Iterar pelo grafo
+    usuario *atual = g->cabeca->proximo;
+    while(atual) {
+        //Iterar pelo grafo novamente
+        usuario *atual2 = atual->proximo;
+        while (atual2){
+            // sorteia se o vai adicionar a pessoa ou não
+            if (rand() % 10 < 5) {
+                listaInserirOrdenado(atual->amizades, atual2->id, atual2);
+                listaInserirOrdenado(atual2->amizades, atual->id, atual);
+            }
+            atual2 = atual2->proximo;
+        }
+        atual = atual->proximo;
+    }
 }
 
 /* -- Lista -- */
@@ -446,6 +466,15 @@ void listaPrintar(lista *l) {
     return;
 }
 
+usuario *listaBusca_id (lista *l, int id){
+    if(listaVazia(l)) return NULL;
+    nohLista *busca = l->cabeca->proximo;
+    while(busca && busca->id < id)
+        busca = busca->proximo;
+    if(!busca) return NULL;
+    return busca->amigo;
+}
+
 lista *listaBuscaAmizadesFracas(lista *l){
     if (!l) return NULL;
     nohLista *aux = l->cabeca->proximo;
@@ -461,12 +490,26 @@ lista *listaBuscaAmizadesFracas(lista *l){
 
 }
 
+// void dfs (usuario *user, int *counter) {
+//     user->visitado = true;
+//     user->tempo_encontro = *counter;
+//     *counter += 1;
+
+//     nohLista *atual = user->amizades->cabeca->proximo;
+//     while(atual) {
+//         if (!atual->amigo->visitado)
+//             dfs(atual->amigo, counter);
+//         atual = atual->proximo;
+//     }
+
+//     return;
+// }
+
 void DFS(usuario *user, int *counter){
+    // Caso o no da vez já tenha sido visitado, retorna 
     if(user->visitado)
         return;
-    
     printf(">>Visitando %s\n",user->nome);
-
     user->visitado = true;
     user->tempo_encontro = *counter;
     *counter += 1;

@@ -181,6 +181,7 @@ int main(int argc, char const *argv[]) {
     titulo();
     grafo *g = grafoCriar();
     arquivo_ler(g);
+    grafoAdicionarTodos(g);
     home_page(g);
     grafoApagar(g);
 
