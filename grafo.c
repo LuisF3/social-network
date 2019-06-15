@@ -178,7 +178,7 @@ void grafoBuscarTodosNomes(grafo *g, char *nome) {
     usuario *atual = g->cabeca->proximo;
     lista *encontrados = listaCriar();
     while(atual) {
-        if(strncmp(strToLower(atual->nome), strToLower(nome), strlen(nome) < strlen(atual->nome) ? strlen(nome) : strlen(atual->nome)) == 0)
+        if(strncmp(strToLower(atual->nome), strToLower(nome), strlen(nome) < strlen(atual->nome) ? strlen(nome) : strlen(atual->nome)) == 0 && strcmp(usuario_atual->nome, atual->nome))
             listaInserirFim(encontrados, atual->id, atual);
         atual = atual->proximo;
     }

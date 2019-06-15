@@ -109,6 +109,8 @@ void titulo() {
     printf("====================================================================================\n\n");
 }
 
+
+
 void usuario_home_page(grafo *g) {
     if(!g) return;
     char opcao, *nome;
