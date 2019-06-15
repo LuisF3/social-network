@@ -4,11 +4,13 @@
 #include <ctype.h>
 #include "grafo.h"
 
-void listaPrintar(lista *l);
-void listaPrintarAfinidade(lista *l);
+void listaPrintar(lista *l, int qtdDePrints);
+void listaPrintarAfinidade(lista *l, int qtdDePrints, int afinidadeMinima);
 usuario *listaRemoverBusca_Posicao(lista *l, int posicao);
 float verificadorAfinidade (usuario *usuario1, usuario *usuario2);
-void DFS(usuario *user, int *counter);
+// void DFS(usuario *user, int *counter);
+lista *recomendacaoNamorado();
+lista *recomendacaoAmigos();
 
 /* -- Grafo -- */
 
@@ -41,9 +43,6 @@ struct _usuario_no{
     usuario *proximo;       // próximo no encademento do grafo
     lista *amizades;        // amizades do indivíduo
     lista *pedido_amizade;  // solicitações de amizades
-    bool visitado;          // booleano que serve para verificar se o nó já foi visitado 
-    int tempo_encontro;     // tempo de encontro do nó 
-    int low;                // low utilizado no Tarjan
 };
 
 int ultimo_id = 1;                 // contador para atribuição do código de identificação de um novo usuário
@@ -161,7 +160,7 @@ void grafoListarSolicitacoes(grafo *g){
             printf("Não há solicitações\n");
             return;
         }
-        listaPrintarAfinidade(usuario_atual->pedido_amizade);
+        listaPrintarAfinidade(usuario_atual->pedido_amizade, listaTamanho(usuario_atual->pedido_amizade), 0);
         printf("Digite o número do usuário que deseja adicionar ou 0 para continuar\n>>");
         scanf("%d%*c", &escolha);
         if (escolha <= 0) break;
@@ -190,7 +189,7 @@ void grafoBuscarTodosNomes(grafo *g, char *nome){
             printf("Não há usuários para enviar solicitação.\n");
             return;
         }
-        listaPrintarAfinidade(encontrados);
+        listaPrintarAfinidade(encontrados, listaTamanho(encontrados), 0);
         printf("Digite o número do usuário que deseja adicionar ou 0 para continuar.\n>>");
         scanf("%d%*c", &escolha);
         if(escolha <= 0) break;
@@ -207,7 +206,7 @@ void grafoBuscarTodosNomes(grafo *g, char *nome){
 
 void grafoListarAmizades(){
     printf("==================\n");
-    listaPrintar(usuario_atual->amizades);
+    listaPrintar(usuario_atual->amizades, listaTamanho(usuario_atual->amizades));
     printf("==================\n");
     return;
 }
@@ -220,7 +219,7 @@ void grafoRemoverAmizades(){
             printf("Sem amigos para remover.\n");
             return;
         }
-        listaPrintar(usuario_atual->amizades);
+        listaPrintar(usuario_atual->amizades, listaTamanho(usuario_atual->amizades));
         printf("Digite o número do usuário que deseja remover ou 0 para continuar\n>>");
         scanf("%d%*c", &selecao);
         if(selecao <= 0) break;
@@ -237,7 +236,7 @@ void grafoAmizadesIndevidas(){
             printf("Sem amigos a se remover \n");
             return;
         }
-        listaPrintarAfinidade(amizadesFracas);
+        listaPrintarAfinidade(amizadesFracas, listaTamanho(amizadesFracas), 0);
         printf("Digite o número do usuário que deseja remover ou 0 para continuar\n>>");
         scanf("%d%*c", &selecao);
         if(selecao <= 0) break;
@@ -266,7 +265,7 @@ float verificadorAfinidade (usuario *usuario1, usuario *usuario2){
 
     if (afinidadeTotal >= 100)
         return 100;
-    return afinidadeTotal;
+    return 100 - usuario2->idade;
 }
 
 void grafoRecomendacoes(){
@@ -274,14 +273,51 @@ void grafoRecomendacoes(){
         printf("Adicione alguns amigos antes de tentar essa funcionalidade!");
         return;
     }
-
-    int counter = 0;
-    DFS(usuario_atual, &counter);
+    int selecao = -1;
+    lista *recomendacoes = recomendacaoAmigos();
+    
+    while(selecao) {
+        if (listaVazia(recomendacoes)){
+            printf("Nenhuma recomendação encontrada. Tente adicionar mais alguns amigos!\n");
+            return;
+        }
+        listaPrintarAfinidade(recomendacoes, 15, 0);
+        printf("Digite o número do usuário que deseja adicionar ou 0 para continuar\n>>");
+        scanf("%d%*c", &selecao);
+        if(selecao <= 0) break;
+        usuario *novo_amigo = listaRemoverBusca_Posicao(recomendacoes, selecao);
+        listaInserirOrdenado(novo_amigo->pedido_amizade, usuario_atual->id, usuario_atual);
+        printf("Pedido de amizade enviado a %s com sucesso.\n", novo_amigo->nome);
+    }
 }
 
-lista *tarjan(usuario *atual){
-    int counter = 0;
-    DFS(atual, &counter);
+void grafoEncontrarNamorado() {
+    if(listaVazia(usuario_atual->amizades)) {
+        printf("Adicione alguns amigos antes de tentar essa funcionalidade!");
+        return;
+    }
+    int selecao = -1;
+    lista *recomendacoes = recomendacaoNamorado();
+
+    if (listaVazia(recomendacoes)){
+        printf("Nenhum(a) namorado(a) encontrado(a). Tente adicionar mais alguns amigos!\n");
+        return;
+    }
+    listaPrintarAfinidade(recomendacoes, 1, 80);
+    if (listaIsNaLista(usuario_atual->amizades, listaRemoverInicio(recomendacoes)->id)) {
+        printf("O namorado ideal já é seu amigo\n");
+        return;
+    }
+    else
+        printf("Digite 1 para mandar uma solicitação de amizade para o seu possível namorado! (ou 0 para continuar)\n>>");
+
+    scanf("%d%*c", &selecao);
+    if(selecao != 1) return;
+    usuario *novo_amigo = listaRemoverBusca_Posicao(recomendacoes, selecao);
+    listaInserirOrdenado(novo_amigo->pedido_amizade, usuario_atual->id, usuario_atual);
+    printf("Pedido de amizade enviado a %s com sucesso.\n", novo_amigo->nome);
+
+    return;
 }
 
 void grafoAdicionarTodos(grafo *g){
@@ -460,23 +496,25 @@ void listaApagar(lista *l){
     free(l);
 }
 
-void listaPrintarAfinidade(lista *l){
+void listaPrintarAfinidade(lista *l, int qtdDePrints, int afinidadeMinima){
     if (!l) return;
     nohLista *nol = l->cabeca->proximo;
     int i = 1;
-    while(nol != NULL) {
-        printf("%d) Nome: %s - Chances de amizade verdadeira %.2f%%\n", i++, nol->amigo->nome, verificadorAfinidade(usuario_atual, nol->amigo));
+    while(nol != NULL && i <= qtdDePrints) {
+        float afinidade = verificadorAfinidade(usuario_atual, nol->amigo);
+        if (afinidade >= afinidadeMinima)
+        printf("%02d) Chances de amizade verdadeira: %.2f%% - Nome: %s\n", i++, afinidade, nol->amigo->nome);
         nol = nol->proximo;
     }
     return;
 }
 
-void listaPrintar(lista *l){
+void listaPrintar(lista *l, int qtdDePrints){
     if (!l) return;
     nohLista *nol = l->cabeca->proximo;
     int i = 1;
-    while(nol != NULL) {
-        printf("%d) Nome: %s\n", i++, nol->amigo->nome);
+    while(nol != NULL && i <= qtdDePrints) {
+        printf("%02d) Nome: %s\n", i++, nol->amigo->nome);
         nol = nol->proximo;
     }
     return;
@@ -517,44 +555,59 @@ bool listaIsNaLista(lista *l, int id){
     return false;
 }
 
-int listaTamanho(lista *l){
-    if (!l)return 0;
-    nohLista *aux = l->cabeca->proximo;
-    int counter = 0;
-    while (aux)
-    {
-        counter++;
-        aux = aux->proximo;
-    }
-    return counter;
+int listaTamanho(lista *l) {
+    if (!l) return 0;
+    return l->tamanho;
 }
 
-// void dfs (usuario *user, int *counter) {
-//     user->visitado = true;
-//     user->tempo_encontro = *counter;
-//     *counter += 1;
+lista *recomendacaoAmigos(){
+    if (!usuario_atual) return NULL;
+    lista *queue = listaCriar(), *recomendacoes = listaCriar();
+    bool *vis = malloc(sizeof(bool) * ultimo_id);
+    memset(vis, false, ultimo_id * sizeof(bool));
+    listaInserirFim(queue, usuario_atual->id, usuario_atual);
 
-//     nohLista *atual = user->amizades->cabeca->proximo;
-//     while(atual) {
-//         if (!atual->amigo->visitado)
-//             dfs(atual->amigo, counter);
-//         atual = atual->proximo;
-//     }
-
-//     return;
-// }
-
-void DFS(usuario *user, int *counter){
-    // Caso o no da vez já tenha sido visitado, retorna 
-    if(user->visitado)
-        return;
-    printf(">>Visitando %s\n",user->nome);
-    user->visitado = true;
-    user->tempo_encontro = *counter;
-    *counter += 1;
-    nohLista *atual = user->amizades->cabeca->proximo;
-    while(atual){
-        DFS(atual->amigo, counter);
-        atual = atual->proximo;
+    while (!listaVazia(queue)) {
+        usuario *atual = listaRemoverInicio(queue);
+        nohLista *it = atual->amizades->cabeca->proximo;
+        while (it) {
+            if (!vis[it->amigo->id]) {
+                listaInserirFim(queue, it->amigo->id, it->amigo);
+                if (usuario_atual->id != it->amigo->id && !listaIsNaLista(usuario_atual->amizades, it->amigo->id))
+                    listaInserirOrdenado(recomendacoes, -1 * verificadorAfinidade(usuario_atual, it->amigo), it->amigo);
+            }
+            vis[it->amigo->id] = true;
+            it = it->proximo;
+        }
     }
+
+    free(vis);
+    listaApagar(queue);
+    return recomendacoes;
+}
+
+lista *recomendacaoNamorado(){
+    if (!usuario_atual) return NULL;
+    lista *queue = listaCriar(), *recomendacoes = listaCriar();
+    bool *vis = malloc(sizeof(bool) * ultimo_id);
+    memset(vis, false, ultimo_id * sizeof(bool));
+    listaInserirFim(queue, usuario_atual->id, usuario_atual);
+
+    while (!listaVazia(queue)) {
+        usuario *atual = listaRemoverInicio(queue);
+        nohLista *it = atual->amizades->cabeca->proximo;
+        while (it) {
+            if (!vis[it->amigo->id]) {
+                listaInserirFim(queue, it->amigo->id, it->amigo);
+                if (usuario_atual->id != it->amigo->id && !listaIsNaLista(it->amigo->pedido_amizade, usuario_atual->id))
+                    listaInserirOrdenado(recomendacoes, -1 * verificadorAfinidade(usuario_atual, it->amigo), it->amigo);
+            }
+            vis[it->amigo->id] = true;
+            it = it->proximo;
+        }
+    }
+
+    free(vis);
+    listaApagar(queue);
+    return recomendacoes;
 }

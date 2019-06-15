@@ -10,6 +10,8 @@ typedef int bool;
 typedef struct _grafo grafo;
 typedef struct _usuario_no usuario;
 
+void grafoEncontrarNamorado();
+
 /*
 * Aloca dinamicamente um grafo, inicializando seus atributos. 
 * @return grafo*: ponteiro para o grafo criado.

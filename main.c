@@ -17,8 +17,8 @@ void arquivo_ler(grafo *g){
     char *time;
 
     while(!feof(fp)){
-        fscanf(fp, "%d %m[^\n\r] %m[^\n\r] %m[^\n\r] %m[^\n\r] %m[^\n\r] %*c", &idade, &nome, &cidade, &genero_filme, &cor_favorita, &time);
-        if(debug) printf("/%s/\n/%s/\n/%s/\n/%s/\n/%s/\n", nome, cidade, genero_filme, cor_favorita, time);    
+        fscanf(fp, "%d %m[^\n\r] %m[^\n\r] %m[^\n\r] %m[^\n\r] %m[^\n\r]%*c", &idade, &nome, &cidade, &genero_filme, &cor_favorita, &time);
+        if(debug) printf("%d\n/%s/\n/%s/\n/%s/\n/%s/\n/%s/\n", idade, nome, cidade, genero_filme, cor_favorita, time);    
         grafoInserirFim(g, idade, nome, cidade, genero_filme, cor_favorita, time);
 
         free(nome);
@@ -125,7 +125,8 @@ void usuario_home_page(grafo *g){
         printf("| 4) Remover amigo              |\n");
         printf("| 5) Amizades fracas            |\n");
         printf("| 6) Recomendações de amigos    |\n");
-        printf("| 7) Deslogar                   |\n");
+        printf("| 7) Encontrar namorado         |\n");
+        printf("| 8) Deslogar                   |\n");
         printf("+-------------------------------+\n");
         printf(">>");
         scanf("%c%*c", &opcao);
@@ -151,6 +152,9 @@ void usuario_home_page(grafo *g){
                 grafoRecomendacoes();
             break;
             case '7':
+                grafoEncontrarNamorado();
+            break;
+            case '8':
                 logout();
                 grafoLogout();
                 printf("Usuário deslogado com sucesso.\n");
