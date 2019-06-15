@@ -11,6 +11,10 @@ float verificadorAfinidade (usuario *usuario1, usuario *usuario2);
 
 /* -- Grafo -- */
 
+/*
+    recebe uma string e retorna uma cópia com todos os caractéres em minúsculo
+    str - string 
+*/
 char *strToLower(char *str) {
     char *copia = malloc(strlen(str) * sizeof(char));
     for (int i = 0; i < strlen(str); i++)
@@ -19,13 +23,13 @@ char *strToLower(char *str) {
 }
 
 struct _grafo{
-    usuario *cabeca;
-    usuario *ultimo;
-    int qtd_usuarios;
+    usuario *ultimo;    // ultimo termo da lista encadeada
+    usuario *cabeca;    // inicio da lista encadeada
+    int qtd_usuarios;   // quantidade de elementos presentes no grafo
 };
 
 struct _usuario_no{
-    int id;
+    int id;             //identificador do usuário
     int idade;
     char *nome;
     char *cidade;
@@ -33,12 +37,12 @@ struct _usuario_no{
     char *cor_favorita;
     char *time;
 
-    lista *amizades;
-    lista *pedido_amizade;
-    usuario *proximo;
-    bool visitado;
-    int tempo_encontro;
-    int low;
+    usuario *proximo;       // proximo no encademento do grafo
+    lista *amizades;        // amizades que o individuo tem
+    lista *pedido_amizade;  // solicitaçoes de amizades
+    bool visitado;          // boolean que serve para verificar se o nó já foi viziado 
+    int tempo_encontro;     // tempo de encontro do no 
+    int low;                // low utilizado no Tarjan
 };
 
 int ultimo_id = 1;
@@ -277,6 +281,11 @@ lista *tarjan(usuario *atual){
 
 /* -- Lista -- */
 
+/*
+    lista de usuários 
+    armazena, normalmente a afinidade entre dois 
+    vértices, no caso, a amizade entre dois amigos
+*/
 struct LISTA{
     nohLista *cabeca;
     nohLista *fim;
@@ -286,7 +295,7 @@ struct LISTA{
 struct NOHLISTA{
     int id;
     float afinidade;
-    usuario *amigo;
+    usuario *amigo;     //ponteiro para um dos usuários (vertices do Grafo)
 
     nohLista *proximo;
 };
@@ -307,12 +316,14 @@ lista *listaCriar(){
     return l;
 }
 
+// checka se a lista está vazia
 int listaVazia(lista *l){
     if (!l)
         return 1;
     return l->tamanho == 0;
 }
 
+// insere no inicio da lista
 bool listaInserirInicio(lista *l, int id, usuario *amigo){
 
     if (!l || !amigo)
@@ -332,6 +343,7 @@ bool listaInserirInicio(lista *l, int id, usuario *amigo){
     return true;
 }
 
+//insere no fim da lista
 bool listaInserirFim(lista *l, int id, usuario *amigo){
     if (!l || !amigo)
         return false;
