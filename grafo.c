@@ -26,17 +26,25 @@ char *strToLower(char *str){
 }
 
 struct _cidade{
-    char nome[64];
-    char estado[2];
+    char nome[65];
+    char estado[3];
     float latitude;
     float longitude;
+};
+
+struct _cor{
+    char nome[65];
+    float red;
+    float green;
+    float blue;
 };
 
 struct _grafo{
     usuario *ultimo;            // último termo da lista encadeada
     usuario *cabeca;            // início da lista encadeada
     int qtd_usuarios;           // quantidade de elementos presentes no grafo
-    cidade todas_cidades[5560]; // conjunto com os dados de todas as cidades do Brasil
+    cidade todas_cidades[5559]; // conjunto com os dados de todas as cidades do Brasil
+    cor todas_cores[865];       // conjunto dos dados de todas as cores disponíveis
 };
 
 struct _usuario_no{
@@ -44,8 +52,8 @@ struct _usuario_no{
     int idade;
     char *nome;
     cidade cidade_info;
+    cor cor_info;
     char *genero_filme;
-    char *cor_favorita;
     char *time;
 
     usuario *proximo;       // próximo no encademento do grafo
@@ -60,8 +68,9 @@ void arquivoCidadesLer(grafo *g){
     FILE *fp = fopen("cidades.csv","r");
     int pos = 0;
 
+    fscanf(fp,"%*s%*c%*c");
     while(!feof(fp)){
-        fscanf(fp,"%[^,]%*c%[^,]%*c%[^,]%*c%f%*c%f", g->todas_cidades[pos].estado, g->todas_cidades[pos].nome, &(g->todas_cidades[pos].latitude), &(g->todas_cidades[pos].longitude));
+        fscanf(fp,"%64[^,]%*c%2[^,]%*c%f%*c%f%*c", g->todas_cidades[pos].nome, g->todas_cidades[pos].estado, &(g->todas_cidades[pos].longitude), &(g->todas_cidades[pos].latitude));
         pos++;
     }
 
@@ -91,28 +100,32 @@ int grafoVazio(grafo *g){
     return g->qtd_usuarios == 0;
 }
 
-void grafoInserirFim(grafo *g, int idade, char *nome, char *nome_cidade, char *estado,float latitude, float longitude, char *genero_filme, char *cor_favorita, char *time){
+void grafoInserirFim(grafo *g, int idade, char *nome, char *nome_cidade, char *estado, float latitude, float longitude, char *genero_filme, char *cor, float red, float green, float blue,char *time){
     usuario *novo = (usuario *) malloc(sizeof(usuario));
     novo->proximo = NULL;
 
     novo->nome = malloc(strlen(nome));
     novo->genero_filme = malloc(strlen(genero_filme));
-    novo->cor_favorita = malloc(strlen(cor_favorita));
     novo->time = malloc(strlen(time));
 
     // Atribuição das variáveis de um usuário
     novo->id = ultimo_id++;
     novo->idade = idade;
     strcpy(novo->nome, nome);
-
+    // Atribuição das variáveis relacionadas à cidade
     strcpy(novo->cidade_info.nome, nome_cidade);
     strcpy(novo->cidade_info.estado, estado);
     novo->cidade_info.latitude = latitude;
     novo->cidade_info.longitude = longitude;
-
+    // Atribuição de outras variáveis  
     strcpy(novo->genero_filme, genero_filme);
-    strcpy(novo->cor_favorita, cor_favorita);
     strcpy(novo->time, time);
+    // Atribuição das variáveis relacionadas à cor
+    strcpy(novo->cor_info.nome,cor);
+    novo->cor_info.red = red;
+    novo->cor_info.green = green;
+    novo->cor_info.blue = blue;
+    // Criação das lista empregadas no armazenamento de informações referentes a outros usuários
     novo->amizades = listaCriar();
     novo->pedido_amizade = listaCriar();
 
@@ -272,13 +285,13 @@ void grafoAmizadesIndevidas(){
     }
 }
 
-float verificadorAfinidade (usuario *usuario1, usuario *usuario2){
+float verificadorAfinidade(usuario *usuario1, usuario *usuario2){
     if (!usuario1 || !usuario2) return -1;
     //VERIFICAR AMIZADES EM COMUM
     float afinidadeTotal = 100.0;
 
-    if (strcmp(strToLower(usuario1->cidade), strToLower(usuario2->cidade)) != 0)
-        afinidadeTotal *= 0.8;
+    // if (strcmp(strToLower(usuario1->cidade), strToLower(usuario2->cidade)) != 0)
+    //     afinidadeTotal *= 0.8;
     if (strcmp(strToLower(usuario1->genero_filme), strToLower(usuario2->genero_filme)) == 0)
         afinidadeTotal *= 1.2;
     if (strcmp(strToLower(usuario1->cor_favorita), strToLower(usuario2->cor_favorita)) == 0)
@@ -317,7 +330,7 @@ void grafoRecomendacoes(){
     }
 }
 
-void grafoEncontrarNamorado() {
+void grafoEncontrarNamorado(){
     if(listaVazia(usuario_atual->amizades)) {
         printf("Adicione alguns amigos antes de tentar essa funcionalidade!");
         return;
@@ -363,6 +376,44 @@ void grafoAdicionarTodos(grafo *g){
         }
         atual = atual->proximo;
     }
+}
+
+bool busca_binaria_cidade(grafo *g, char *nome, char *estado, float *latitude, float *longitude){
+    int inicio = 0;
+    int fim = sizeof(g->todas_cidades) / sizeof(cidade);
+    int meio;
+    int cmp;
+
+    while(inicio <= fim){
+        meio = (fim + inicio)/2;
+        cmp = strncmp(strToLower(nome), strToLower(g->todas_cidades[meio].nome), strlen(nome) < strlen(g->todas_cidades[meio].nome) ? strlen(nome) : strlen(g->todas_cidades[meio].nome));
+        if(cmp == 0){
+            while(strncmp(strToLower(nome), strToLower(g->todas_cidades[meio].nome), strlen(nome) < strlen(g->todas_cidades[meio].nome) ? strlen(nome) : strlen(g->todas_cidades[meio].nome)) == 0 && meio >= 0)
+                meio -= 1;
+            meio += 1;
+            while(true){
+                int i;
+                for(i = meio; strncmp(strToLower(nome), strToLower(g->todas_cidades[i].nome), strlen(nome) < strlen(g->todas_cidades[i].nome) ? strlen(nome) : strlen(g->todas_cidades[i].nome)) == 0 && i < sizeof(g->todas_cidades) / sizeof(cidade); i++)
+                    printf("%02d) %s, %s\n", i - meio + 1, g->todas_cidades[i].nome, g->todas_cidades[i].estado);
+                int selecao = -1;
+                printf("Selecione uma das cidades abaixo:\n>>");
+                scanf("%d%*c", &selecao);
+                if(selecao <= 0 || selecao > i - meio){
+                    printf("Valor inválido\n");
+                    continue;
+                }
+                strcpy(estado,g->todas_cidades[selecao + meio - 1].estado);
+                *latitude = g->todas_cidades[selecao + meio - 1].latitude;
+                *longitude = g->todas_cidades[selecao + meio - 1].longitude;
+                printf("Cidade %s selecionada com sucesso!\n", g->todas_cidades[selecao + meio - 1].nome);
+                return true;
+            }
+        }
+        else if(cmp < 0) fim = meio - 1; 
+        else inicio = meio + 1;
+    }
+    printf("Nenhuma cidade encontrada. Você quis dizer %s?\n",g->todas_cidades[meio].nome);
+    return false;
 }
 
 /* -- Lista -- */

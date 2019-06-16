@@ -10,6 +10,7 @@ typedef int bool;
 typedef struct _grafo grafo;
 typedef struct _usuario_no usuario;
 typedef struct _cidade cidade;
+typedef struct _cor cor;
 
 void grafoEncontrarNamorado();
 
@@ -22,8 +23,21 @@ grafo *grafoCriar();
 
 /*
 * Insere um vértice no fim da lista após a criação e atribuição dos dados ao novo elemento.
+* @param g:
+* @param idade:
+* @param nome:
+* @param nome_cidade:
+* @param estado:
+* @param latitude:
+* @param longitude:
+* @param genero_filme:
+* @param cor:
+* @param red:
+* @param green:
+* @param blue:
+* @param filme: 
 */
-void grafoInserirFim();
+void grafoInserirFim(grafo *g, int idade, char *nome, char *nome_cidade, char *estado, float latitude, float longitude, char *genero_filme, char *cor, float red, float green, float blue,char *time)
 
 /*
 * Desaloca o grafo da memória principal.
@@ -91,6 +105,13 @@ void grafoRecomendacoes();
 */
 void grafoAdicionarTodos(grafo *g);
 
+/*
+*
+* @param g:
+* @param cidade_info:
+* @return bool:
+*/
+bool busca_binaria_cidade(grafo *g, char *nome, char *estado, float *latitude, float *longitude);
 
 typedef struct LISTA lista;
 typedef struct NOHLISTA nohLista;
