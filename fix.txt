@@ -2,3 +2,5 @@
 2) - Impedir que uma pessoa adicione outra duas vezes                - OK
 3) - Permitir entrada de numeros menores que 10 na idade             - OK
 4) - Entrada de Opções inválidas só buga, tipo input de string en inteiro
+5) - permitir remoção da lista de solicitações 
+6) - verficar se nome já existe antes de criar usuário.
