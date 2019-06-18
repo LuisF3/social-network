@@ -19,7 +19,7 @@ void arquivo_ler(grafo *g){
     float longitude;
 
     //dados da cor
-    char *cor;
+    char cor[65];
     float red;
     float green;
     float blue;
@@ -30,14 +30,12 @@ void arquivo_ler(grafo *g){
     char *time;
 
     while(!feof(fp)){
-        fscanf(fp, "%d %m[^\n\r] %m[^\n\r] %m[^\n\r] %m[^\n\r] %m[^\n\r]%*c", &idade, &nome, &cidade, &genero_filme, &cor_favorita, &time);
+        fscanf(fp, "%d %m[^\n\r] %[^\n\r] %m[^\n\r] %[^\n\r] %m[^\n\r]%*c", &idade, &nome, cidade, &genero_filme, cor_favorita, &time);
         if(debug) printf("%d\n/%s/\n/%s/\n/%s/\n/%s/\n/%s/\n", idade, nome, cidade, genero_filme, cor_favorita, time);    
         //grafoInserirFim(g, idade, nome, cidade, genero_filme, cor_favorita, time);
 
         free(nome);
-        free(cidade);
         free(genero_filme);
-        free(cor_favorita);
         free(time);
     }
 
@@ -55,8 +53,12 @@ void cadastrar(grafo *g){
     float latitude;
     float longitude;
 
-    char *genero_filme;
     char *cor_favorita;
+    float red;
+    float green;
+    float blue;
+
+    char *genero_filme;
     char *time;
 
     while(idade < 10) {
@@ -69,17 +71,19 @@ void cadastrar(grafo *g){
     do{
         printf("Cidade:\n>>");
         scanf("%64[^\n\r]%*c", cidade); 
-    }while (busca_binaria_cidade(g, cidade, estado, &latitude, &longitude));
+    }while (!busca_binaria_cidade(g, cidade, estado, &latitude, &longitude));
     
     printf("Gênero de filme favorito:\n>>");
     scanf("%m[^\n\r]%*c", &genero_filme);
-    printf("Cor favorita:\n>>");
-    scanf("%m[^\n\r]%*c", &cor_favorita);
+    do{
+        printf("Cor favorita:\n>>");
+        scanf("%m[^\n\r]%*c", &cor_favorita);
+    }while (!busca_binaria_cor(g, cor_favorita, &red, &green, &blue));
     printf("Time de futebol:\n>>");
     scanf("%m[^\n\r]%*c", &time);
 
-    if(debug) printf("/%s/\n/%s/\n/%s/\n/%s/\n/%s/\n", nome, cidade, genero_filme, cor_favorita, time);    
-    grafoInserirFim(g, idade, nome, cidade, estado, latitude, longitude, genero_filme, cor_favorita, time);
+    if(debug) printf("/%s/\n/%s/\n/%s/\n/%s/\n/%s/\n", nome, cidade, genero_filme, cor_favorita, time);
+    grafoInserirFim(g, idade, nome, cidade, estado, latitude, longitude, genero_filme, cor_favorita, red, green, blue, time);
     printf("Cadastrado com sucesso\n");
 
     free(nome);
@@ -224,14 +228,14 @@ int main(int argc, char const *argv[]){
     char opcao = '2';
     while(opcao != '0' && opcao != '1'){
         printf("Deseja criar amizades aleatórias? (1 - Sim / 0 - Não)\n>>");
-        scanf("%d%*c",&opcao);
+        scanf("%c%*c",&opcao);
         if(opcao != '0' && opcao != '1')
             printf("Opção inválida\n");
     }
 
     titulo();
     grafo *g = grafoCriar();
-    arquivo_ler(g);
+    // arquivo_ler(g);
     if(opcao) grafoAdicionarTodos(g);
     home_page(g);
     grafoApagar(g);

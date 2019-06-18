@@ -37,7 +37,7 @@ grafo *grafoCriar();
 * @param blue:
 * @param filme: 
 */
-void grafoInserirFim(grafo *g, int idade, char *nome, char *nome_cidade, char *estado, float latitude, float longitude, char *genero_filme, char *cor, float red, float green, float blue,char *time)
+void grafoInserirFim(grafo *g, int idade, char *nome, char *nome_cidade, char *estado, float latitude, float longitude, char *genero_filme, char *cor, float red, float green, float blue,char *time);
 
 /*
 * Desaloca o grafo da memória principal.
@@ -112,6 +112,7 @@ void grafoAdicionarTodos(grafo *g);
 * @return bool:
 */
 bool busca_binaria_cidade(grafo *g, char *nome, char *estado, float *latitude, float *longitude);
+bool busca_binaria_cor(grafo *g, char *cor, float *red, float *green, float *blue);
 
 typedef struct LISTA lista;
 typedef struct NOHLISTA nohLista;

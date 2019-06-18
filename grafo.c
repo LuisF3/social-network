@@ -68,9 +68,22 @@ void arquivoCidadesLer(grafo *g){
     FILE *fp = fopen("cidades.csv","r");
     int pos = 0;
 
-    fscanf(fp,"%*s%*c%*c");
+    fscanf(fp,"%*s%*c");
     while(!feof(fp)){
         fscanf(fp,"%64[^,]%*c%2[^,]%*c%f%*c%f%*c", g->todas_cidades[pos].nome, g->todas_cidades[pos].estado, &(g->todas_cidades[pos].longitude), &(g->todas_cidades[pos].latitude));
+        pos++;
+    }
+
+    fclose(fp); 
+}
+
+void arquivoCoresLer(grafo *g){
+    FILE *fp = fopen("cores.csv","r");
+    int pos = 0;
+
+    fscanf(fp,"%*s%*c");
+    while(!feof(fp)){
+        fscanf(fp,"%64[^,]%*c%f%*c%f%*c%f%*c", g->todas_cores[pos].nome, &(g->todas_cores[pos].red), &(g->todas_cores[pos].green), &(g->todas_cores[pos].blue));
         pos++;
     }
 
@@ -92,6 +105,7 @@ grafo *grafoCriar(){
     g->qtd_usuarios = 0;
 
     arquivoCidadesLer(g);
+    arquivoCoresLer(g);
 
     return g;
 }
@@ -294,8 +308,6 @@ float verificadorAfinidade(usuario *usuario1, usuario *usuario2){
     //     afinidadeTotal *= 0.8;
     if (strcmp(strToLower(usuario1->genero_filme), strToLower(usuario2->genero_filme)) == 0)
         afinidadeTotal *= 1.2;
-    if (strcmp(strToLower(usuario1->cor_favorita), strToLower(usuario2->cor_favorita)) == 0)
-        afinidadeTotal *= 1.1;
     if (strcmp(strToLower(usuario1->time), strToLower(usuario2->time)) != 0)
         afinidadeTotal *= 0.6;
     int deltaIdade = usuario1->idade - usuario2->idade;
@@ -413,6 +425,45 @@ bool busca_binaria_cidade(grafo *g, char *nome, char *estado, float *latitude, f
         else inicio = meio + 1;
     }
     printf("Nenhuma cidade encontrada. Você quis dizer %s?\n",g->todas_cidades[meio].nome);
+    return false;
+}
+
+bool busca_binaria_cor(grafo *g, char *cor, float *red, float *green, float *blue){
+    int inicio = 0;
+    int fim = sizeof(g->todas_cores) / sizeof(cor);
+    fim /= 10;
+    int meio;
+    int cmp;
+
+    while(inicio <= fim){
+        meio = (fim + inicio)/2;
+        cmp = strncmp(strToLower(cor), strToLower(g->todas_cores[meio].nome), strlen(cor) < strlen(g->todas_cores[meio].nome) ? strlen(cor) : strlen(g->todas_cores[meio].nome));
+        if(cmp == 0){
+            while(strncmp(strToLower(cor), strToLower(g->todas_cores[meio].nome), strlen(cor) < strlen(g->todas_cores[meio].nome) ? strlen(cor) : strlen(g->todas_cores[meio].nome)) == 0 && meio >= 0)
+                meio -= 1;
+            meio += 1;
+            while(true){
+                int i;
+                for(i = meio; strncmp(strToLower(cor), strToLower(g->todas_cores[i].nome), strlen(cor) < strlen(g->todas_cores[i].nome) ? strlen(cor) : strlen(g->todas_cores[i].nome)) == 0 && i < sizeof(g->todas_cores) / sizeof(cidade); i++)
+                    printf("%02d) %s\n", i - meio + 1, g->todas_cores[i].nome);
+                int selecao = -1;
+                printf("Selecione uma das cidades abaixo:\n>>");
+                scanf("%d%*c", &selecao);
+                if(selecao <= 0 || selecao > i - meio){
+                    printf("Valor inválido\n");
+                    continue;
+                }
+                *red = g->todas_cores[selecao + meio - 1].red;
+                *green = g->todas_cores[selecao + meio - 1].green;
+                *blue = g->todas_cores[selecao + meio - 1].blue;
+                printf("Cor %s selecionada com sucesso!\n", g->todas_cores[selecao + meio - 1].nome);
+                return true;
+            }
+        }
+        else if(cmp < 0) fim = meio - 1; 
+        else inicio = meio + 1;
+    }
+    printf("Nenhuma cidade encontrada. Você quis dizer %s?\n",g->todas_cores[meio].nome);
     return false;
 }
 
