@@ -109,10 +109,12 @@ void grafoRecomendacoes();
 void grafoAdicionarTodos(grafo *g);
 
 /*
-* 
+* Aplica busca binária sobre o conjunto de cidades presentes no sistema para listar as mais próximas da chave declarada como parâmetro.
+* Caso não existam cidades com nome parecido de acordo com o método empregado, imprime na tela o valor da última execução. Caso contrário,
+* possibilita inserir os dados da cidade selecionada nas demais variáveis de parâmetro.
 * @param g: grafo das pessoas cadastradas no sistema
-* @param nome:
-* @param estado:
+* @param nome: string utilizada como comparação
+* @param estado: 
 * @param latitude:
 * @param longitude:
 * @return bool:
