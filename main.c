@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "grafo.h"
 
-int debug = 0;
+int debug = 1;
 int id_usuario_logado = -1;
 
 void arquivo_ler(grafo *g){
@@ -26,13 +26,13 @@ void arquivo_ler(grafo *g){
 
     //outras informações
     char *genero_filme;
-    char *cor_favorita;
     char *time;
 
+    fscanf(fp, "%*s");
     while(!feof(fp)){
-        fscanf(fp, "%d %m[^\n\r] %[^\n\r] %m[^\n\r] %[^\n\r] %m[^\n\r]%*c", &idade, &nome, cidade, &genero_filme, cor_favorita, &time);
-        if(debug) printf("%d\n/%s/\n/%s/\n/%s/\n/%s/\n/%s/\n", idade, nome, cidade, genero_filme, cor_favorita, time);    
-        //grafoInserirFim(g, idade, nome, cidade, genero_filme, cor_favorita, time);
+        fscanf(fp, "%d%*c%m[^,]%*c%64[^,]%*c%2[^,]%*c%f%*c%f%*c%m[^,]%*c%64[^,]%*c%f%*c%f%*c%f%*c%m[^\n\r]%*c", &idade, &nome, cidade, estado, &longitude, &latitude, &genero_filme, cor, &red, &green, &blue, &time);
+        if(debug) printf("%d\n/%s/\n/%s/\n/%s/\n/%s/\n", idade, nome, cidade, genero_filme, time);    
+        grafoInserirFim(g, idade, nome, cidade, estado, longitude, latitude, genero_filme, cor, red, green, blue, time);
 
         free(nome);
         free(genero_filme);
@@ -61,9 +61,9 @@ void cadastrar(grafo *g){
     char *genero_filme;
     char *time;
 
-    while(idade < 10) {
-        printf("Idade:\n>>");
-        scanf("%d%*c", &idade);
+    while(idade < 1) {
+     printf("Idade:\n>>");
+     scanf("%d*c", &idade);
         if(idade < 10) printf("Cadastro proibido para menores de 10 anos.\n");
     }
     do{
@@ -196,7 +196,7 @@ void home_page(grafo *g){
     if(!g) return;
 
     char opcao;
-    while(true) {
+    while(true){
         printf("+----------------------+\n");
         printf("|         Menu         |\n");
         printf("+----------------------+\n");
@@ -206,7 +206,7 @@ void home_page(grafo *g){
         printf("+----------------------+\n");
         printf(">>");
         scanf("%c%*c", &opcao);
-        switch(opcao) {
+        switch(opcao){
             case '1':
                 cadastrar(g);
             break;
@@ -233,11 +233,12 @@ int main(int argc, char const *argv[]){
         scanf("%c%*c",&opcao);
         if(opcao != '0' && opcao != '1')
             printf("Opção inválida\n");
+        system("tput reset");
     }
 
     titulo();
     grafo *g = grafoCriar();
-    // arquivo_ler(g);
+    arquivo_ler(g);
     if(opcao) grafoAdicionarTodos(g);
     home_page(g);
     grafoApagar(g);

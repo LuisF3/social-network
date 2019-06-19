@@ -23,7 +23,7 @@ Idade,Nome,Cidade,Estado,Longitude,Latitude,Filme,Cor,Red,Green,Blue,Time
 47,Elon Musk,São Paulo,SP,-23.5561782,-46.6375468,Comédia,Light Apricot,253,213,177,XSpace 
 23,Giovana Guedes,São Miguel da Baixa Grande,PI,-5.856457,-42.193422999999996,Romance,Black,0,0,0,Nenhum
 42,Green Gaus Stokes,Osasco,SP,-23.5325,-46.7918,Matemática,Red,255,0,0,Nenhum
-40,Alan Turin,São Paulo,Computacao,Red,255,0,0,Nenhum
+40,Alan Turin,São Paulo,SP,-23.5561782,-46.6375468,Computacao,Red,255,0,0,Nenhum
 49,Dijkstra,Palmeira,SC,-27.583013,-50.157717,Drama,Light Apricot,253,213,177,Nenhum
 81,Donald Knuth,Palmeira,SC,-27.583013,-50.157717,Romance,Black,0,0,0,Nenhum
 10,Ash Ketchum,Potirendaba,SP,-21.042789000000006,-49.381509,Animação,Teal Blue,54,117,136,Nenhum
