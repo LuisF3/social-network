@@ -66,8 +66,10 @@ void cadastrar(grafo *g){
         scanf("%d%*c", &idade);
         if(idade < 10) printf("Cadastro proibido para menores de 10 anos.\n");
     }
-    printf("Nome completo:\n>>");
-    scanf("%m[^\n\r]%*c", &nome);
+    do{
+        printf("Nome completo:\n>>");
+        scanf("%m[^\n\r]%*c", &nome);
+    }while(busca_nome(nome,g));
     do{
         printf("Cidade:\n>>");
         scanf("%64[^\n\r]%*c", cidade); 

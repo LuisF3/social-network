@@ -208,7 +208,8 @@ void grafoLogout(){
 void grafoListarSolicitacoes(grafo *g){
     if(!g) return;
     int escolha;
-    while (usuario_atual) {
+
+    while(usuario_atual){
         if(listaVazia(usuario_atual->pedido_amizade)){
             printf("Não há solicitações\n");
             return;
@@ -216,7 +217,20 @@ void grafoListarSolicitacoes(grafo *g){
         listaPrintarAfinidade(usuario_atual->pedido_amizade, listaTamanho(usuario_atual->pedido_amizade), 0);
         printf("Digite o número do usuário que deseja adicionar ou 0 para continuar\n>>");
         scanf("%d%*c", &escolha);
-        if (escolha <= 0) break;
+        if(escolha < 0) break;
+        else if(escolha == 0){
+            while(usuario_atual){
+                if(listaVazia(usuario_atual->pedido_amizade)){
+                    printf("Não há solicitações\n");
+                    return;
+                }   
+                listaPrintarAfinidade(usuario_atual->pedido_amizade, listaTamanho(usuario_atual->pedido_amizade), 0);
+                printf("Digite o número do usuário que deseja recusar ou 0 para continuar\n>>");
+                scanf("%d%*c", &escolha);
+                if(escolha <= 0) return;
+                listaRemoverBusca_Posicao(usuario_atual->pedido_amizade, escolha);
+            }
+        }
         usuario *novo_amigo = listaRemoverBusca_Posicao(usuario_atual->pedido_amizade, escolha);
         if(listaInserirOrdenado(usuario_atual->amizades, novo_amigo->id, novo_amigo) && listaInserirOrdenado(novo_amigo->amizades, usuario_atual->id, usuario_atual))
             printf("Adicionado com sucesso!\n");
@@ -321,7 +335,7 @@ float verificadorAfinidade(usuario *usuario1, usuario *usuario2){
 
 void grafoRecomendacoes(){
     if(listaVazia(usuario_atual->amizades)) {
-        printf("Adicione alguns amigos antes de tentar essa funcionalidade!");
+        printf("Adicione alguns amigos antes de tentar essa funcionalidade!\n");
         return;
     }
     int selecao = -1;
@@ -447,7 +461,7 @@ bool busca_binaria_cor(grafo *g, char *cor, float *red, float *green, float *blu
                 for(i = meio; strncmp(strToLower(cor), strToLower(g->todas_cores[i].nome), strlen(cor) < strlen(g->todas_cores[i].nome) ? strlen(cor) : strlen(g->todas_cores[i].nome)) == 0 && i < sizeof(g->todas_cores) / sizeof(cidade); i++)
                     printf("%02d) %s\n", i - meio + 1, g->todas_cores[i].nome);
                 int selecao = -1;
-                printf("Selecione uma das cidades abaixo:\n>>");
+                printf("Selecione uma das cores abaixo:\n>>");
                 scanf("%d%*c", &selecao);
                 if(selecao <= 0 || selecao > i - meio){
                     printf("Valor inválido\n");
@@ -463,16 +477,28 @@ bool busca_binaria_cor(grafo *g, char *cor, float *red, float *green, float *blu
         else if(cmp < 0) fim = meio - 1; 
         else inicio = meio + 1;
     }
-    printf("Nenhuma cidade encontrada. Você quis dizer %s?\n",g->todas_cores[meio].nome);
+    printf("Nenhuma cor encontrada. Você quis dizer %s?\n",g->todas_cores[meio].nome);
+    return false;
+}
+
+bool busca_nome(char *nome, grafo *g){
+    usuario *atual = g->cabeca->proximo;
+    while(atual){
+        if(strcmp(atual->nome,nome) == 0){
+            printf("Nome já cadastrado\n");
+            return true;
+        }
+        atual = atual->proximo;
+    }
     return false;
 }
 
 /* -- Lista -- */
 
 /*
-    lista de usuários 
-    armazena, normalmente a afinidade entre dois 
-    vértices, no caso, a amizade entre dois amigos
+* lista de usuários 
+* armazena, normalmente a afinidade entre dois 
+* vértices, no caso, a amizade entre dois amigos
 */
 struct LISTA{
     nohLista *cabeca;
@@ -504,7 +530,7 @@ lista *listaCriar(){
     return l;
 }
 
-// checka se a lista está vazia
+// checa se a lista está vazia
 int listaVazia(lista *l){
     if (!l)
         return 1;

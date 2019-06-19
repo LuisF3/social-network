@@ -113,6 +113,7 @@ void grafoAdicionarTodos(grafo *g);
 */
 bool busca_binaria_cidade(grafo *g, char *nome, char *estado, float *latitude, float *longitude);
 bool busca_binaria_cor(grafo *g, char *cor, float *red, float *green, float *blue);
+bool busca_nome(char *nome, grafo *g);
 
 typedef struct LISTA lista;
 typedef struct NOHLISTA nohLista;
