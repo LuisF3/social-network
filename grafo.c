@@ -8,7 +8,6 @@ void listaPrintar(lista *l, int qtdDePrints);
 void listaPrintarAfinidade(lista *l, int qtdDePrints, int afinidadeMinima);
 usuario *listaRemoverBusca_Posicao(lista *l, int posicao);
 float verificadorAfinidade (usuario *usuario1, usuario *usuario2);
-// void DFS(usuario *user, int *counter);
 lista *recomendacaoNamorado();
 lista *recomendacaoAmigos();
 
@@ -298,8 +297,8 @@ void grafoRemoverAmizades(){
 void grafoAmizadesIndevidas(){
     int selecao = -1;
     lista *amizadesFracas = listaBuscaAmizadesFracas(usuario_atual->amizades);
-    while(selecao) {
-        if (listaVazia(amizadesFracas)){
+    while(selecao){
+        if(listaVazia(amizadesFracas)){
             printf("Sem amigos a se remover \n");
             return;
         }

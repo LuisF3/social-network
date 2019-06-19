@@ -23,19 +23,19 @@ grafo *grafoCriar();
 
 /*
 * Insere um vértice no fim da lista após a criação e atribuição dos dados ao novo elemento.
-* @param g:
-* @param idade:
-* @param nome:
-* @param nome_cidade:
-* @param estado:
-* @param latitude:
-* @param longitude:
-* @param genero_filme:
-* @param cor:
-* @param red:
-* @param green:
-* @param blue:
-* @param filme: 
+* @param g: grafo das pessoas cadastradas no sistema
+* @param idade: valor para o campo 'idade' do usuário
+* @param nome: valor para o campo 'nome' do usuário
+* @param nome_cidade: valor para o campo 'nome' de 'cidade' do usuário
+* @param estado: valor para o campo 'estado' de 'cidade' do usuário
+* @param latitude: valor para o campo 'latitude' de 'cidade' do usuário
+* @param longitude: valor para o campo 'longitude' de 'cidade' do usuário
+* @param genero_filme: valor para o campo 'genero_filme' do usuário
+* @param cor: valor para o campo 'nome' de 'cor' do usuário
+* @param red: valor para o campo 'red' de 'cor' do usuário
+* @param green: valor para o campo 'green' de 'cor' do usuário
+* @param blue: valor para o campo 'blue' de cor do usuário
+* @param time: valor para o campo 'time' do usuário 
 */
 void grafoInserirFim(grafo *g, int idade, char *nome, char *nome_cidade, char *estado, float latitude, float longitude, char *genero_filme, char *cor, float red, float green, float blue,char *time);
 
@@ -90,12 +90,15 @@ void grafoListarAmizades();
 void grafoRemoverAmizades();
 
 /*
-*
+* Identifica todos os amigos cuja afinidade seja inferior ao valor estabelecido, permitindo ao usuário cadastrado
+* removê-los de sua lista de amizades.
 */
 void grafoAmizadesIndevidas();
 
 /*
-*
+* Realiza busca no sistema e lista as pessoas com perfil mais próximo, embora possam ser exibidos usuários com afinidade
+* inferior à porcentagem mínima. Para que a funcionalidade opere corretamente, o perfil logado deve apresentar ao menos
+* um amigo adicionado.
 */
 void grafoRecomendacoes();
 
@@ -106,13 +109,33 @@ void grafoRecomendacoes();
 void grafoAdicionarTodos(grafo *g);
 
 /*
-*
-* @param g:
-* @param cidade_info:
+* 
+* @param g: grafo das pessoas cadastradas no sistema
+* @param nome:
+* @param estado:
+* @param latitude:
+* @param longitude:
 * @return bool:
 */
 bool busca_binaria_cidade(grafo *g, char *nome, char *estado, float *latitude, float *longitude);
+
+/*
+*
+* @param g:
+* @param cor:
+* @param red:
+* @param green:
+* @param blue:
+* @return bool:
+*/
 bool busca_binaria_cor(grafo *g, char *cor, float *red, float *green, float *blue);
+
+/*
+*
+* @param nome:
+* @param g: grafo das pessoas cadastradas no sistema
+* @return bool:
+*/
 bool busca_nome(char *nome, grafo *g);
 
 typedef struct LISTA lista;
