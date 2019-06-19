@@ -290,6 +290,7 @@ void grafoRemoverAmizades(){
         scanf("%d%*c", &selecao);
         if(selecao <= 0) break;
         usuario *novo_amigo = listaRemoverBusca_Posicao(usuario_atual->amizades, selecao);
+        listaRemoverBusca_id(novo_amigo->amizades, usuario_atual->id);
         printf("%s removido com sucesso.\n", novo_amigo->nome);
     }
 }
@@ -312,6 +313,28 @@ void grafoAmizadesIndevidas(){
     }
 }
 
+int distanciaPorcentual(float latitude, float longitude, float latitude2, float longitude2){
+    float lat = (latitude - latitude2) * (latitude - latitude2);
+    float log = (longitude - longitude2) * (longitude - longitude2);
+    
+
+    float per = (lat + log) / ((46 * 46) + (79 * 79));
+    
+    return per;
+}
+
+int corPorcentual(float red, float blue, float green, float red2, float blue2, float green2){
+    float redr = (red - red2) * (red - red2);
+    float bluer = (blue - blue2) * (blue - blue2);
+    float greenr = (green - green2) * (green - green2);
+    
+
+    float per = (redr + bluer + greenr) / (256 * 256 * 3);
+    
+    return per;
+}
+
+
 float verificadorAfinidade(usuario *usuario1, usuario *usuario2){
     if (!usuario1 || !usuario2) return -1;
     //VERIFICAR AMIZADES EM COMUM
@@ -319,6 +342,8 @@ float verificadorAfinidade(usuario *usuario1, usuario *usuario2){
 
     // if (strcmp(strToLower(usuario1->cidade), strToLower(usuario2->cidade)) != 0)
     //     afinidadeTotal *= 0.8;
+   
+    
     if (strcmp(strToLower(usuario1->genero_filme), strToLower(usuario2->genero_filme)) == 0)
         afinidadeTotal *= 1.2;
     if (strcmp(strToLower(usuario1->time), strToLower(usuario2->time)) != 0)
@@ -687,8 +712,9 @@ lista *listaBuscaAmizadesFracas(lista *l){
     nohLista *aux = l->cabeca->proximo;
     lista *amizadesFracas = listaCriar();
 
-    while(aux){
-        if(aux->afinidade < minAmizade)
+
+    while (aux) {
+        if (aux->afinidade < minAmizade)
             listaInserirOrdenado(amizadesFracas, aux->amigo->id, aux->amigo);
         aux = aux->proximo;
     }
@@ -696,10 +722,11 @@ lista *listaBuscaAmizadesFracas(lista *l){
 }
 
 bool listaIsNaLista(lista *l, int id){
-    if(!l) return false;
+    if (!l) return false;
     nohLista *aux =  l->cabeca->proximo;
 
-    while(aux){
+    while (aux)
+    {
         if (aux->id == id) return true;
         aux = aux->proximo;
     }
