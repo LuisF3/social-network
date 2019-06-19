@@ -114,29 +114,31 @@ void grafoAdicionarTodos(grafo *g);
 * possibilita inserir os dados da cidade selecionada nas demais variáveis de parâmetro.
 * @param g: grafo das pessoas cadastradas no sistema
 * @param nome: string utilizada como comparação
-* @param estado: 
-* @param latitude:
-* @param longitude:
-* @return bool:
+* @param estado: string para armazenamento do estado da cidade selecionada, caso ocorra a seleção de uma cidade
+* @param latitude: ponteiro para armazenamento da latitude da cidade selecionada, caso ocorra a seleção de uma cidade
+* @param longitude: ponteiro para armazenamento da latitude da cidade selecionada, caso ocorra a seleção de uma cidade
+* @return bool: false (nenhuma cidade identificada) / true (cidade selecionada) 
 */
 bool busca_binaria_cidade(grafo *g, char *nome, char *estado, float *latitude, float *longitude);
 
 /*
-*
-* @param g:
-* @param cor:
-* @param red:
-* @param green:
-* @param blue:
-* @return bool:
+* Aplica busca binária sobre o conjunto de cores presentes no sistema para listar as mais próximas da chave declarada como parâmetro.
+* Caso não existam cores com nome parecido de acordo com o método empregado, imprime na tela o valor da última execução. Caso contrário,
+* possibilita inserir os dados da cor selecionada nas demais variáveis de parâmetro. 
+* @param g: grafo das pessoas cadastradas no sistema
+* @param cor: string utilizada como comparação                                                     
+* @param red: ponteiro para armazenamento da quantidade de vermelho, caso ocorra a seleção de uma cor
+* @param green: ponteiro para armazenamento da quantidade de verde, caso ocorra a seleção de uma cor
+* @param blue: ponteiro para armazenamento da quantidade de azul, caso ocorra a seleção de uma cor
+* @return bool: false (nenhuma cor identificada) / true (cor selecionada)
 */
 bool busca_binaria_cor(grafo *g, char *cor, float *red, float *green, float *blue);
 
 /*
-*
-* @param nome:
+* Percorre a lista de nomes dos usuários para checar a existência da chave de busca no conjunto.
+* @param nome: nome para checagem
 * @param g: grafo das pessoas cadastradas no sistema
-* @return bool:
+* @return bool: false (o nome não consta no sistema) / true (nome já registrado)
 */
 bool busca_nome(char *nome, grafo *g);
 
@@ -197,32 +199,33 @@ int listaVazia(lista *l);
 void listaApagar(lista *l);
 
 /*
-*
-* @param l:
-* @return lista*:
+* Produz uma lista com todos os amigos cuja amizade estiver abaixo do mínimo.
+* @param l: lista de amizades do usuário
+* @return lista*: ponteiro com a lista resultante
 */
 lista *listaBuscaAmizadesFracas(lista *l);
 
 /*
-*
-* @param l:
-* @param id:
-* @return usuario*:
+* Procura pelo usuário de mesmo identificador do valor de parâmtero.
+* @param l: lista sobre a qual será realizada a operação
+* @param id: identificador do usuário procurado
+* @return usuario*: ponteiro para o nó da lista na qual se encontra o valor desejado
+* Caso não se encontre a chave entre os valores existentes, a função retornará nulo.
 */
 usuario *listaBusca_id(lista *l, int id);
 
 /*
-*
-* @param l:
-* @param id:
+* Remove o elemento da lista cujo atributo 'id' seja equivalente ao declarado.
+* @param l: lista sobre a qual será realizada a operação
+* @param id: identificador do usuário procurado
 */
 void listaRemoverBusca_id(lista *l, int id);
 
 /*
-*
-* @param l:
-* @param id:
-* @return bool:
+* Procura por um usuário com o id especificado na lista.
+* @param l: lista sobre a qual será realizada a operação
+* @param id: identificador do usuário procurado
+* @return bool: false (usuário não encontrado) / true (usuário encontrado)
 */
 bool listaIsNaLista(lista *l, int id);
 

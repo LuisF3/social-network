@@ -687,9 +687,8 @@ lista *listaBuscaAmizadesFracas(lista *l){
     nohLista *aux = l->cabeca->proximo;
     lista *amizadesFracas = listaCriar();
 
-
-    while (aux) {
-        if (aux->afinidade < minAmizade)
+    while(aux){
+        if(aux->afinidade < minAmizade)
             listaInserirOrdenado(amizadesFracas, aux->amigo->id, aux->amigo);
         aux = aux->proximo;
     }
@@ -697,11 +696,10 @@ lista *listaBuscaAmizadesFracas(lista *l){
 }
 
 bool listaIsNaLista(lista *l, int id){
-    if (!l) return false;
+    if(!l) return false;
     nohLista *aux =  l->cabeca->proximo;
 
-    while (aux)
-    {
+    while(aux){
         if (aux->id == id) return true;
         aux = aux->proximo;
     }

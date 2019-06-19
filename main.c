@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "grafo.h"
 
-int debug = 1;
+int debug = 0;
 int id_usuario_logado = -1;
 
 void arquivo_ler(grafo *g){
@@ -61,9 +61,9 @@ void cadastrar(grafo *g){
     char *genero_filme;
     char *time;
 
-    while(idade < 1) {
-     printf("Idade:\n>>");
-     scanf("%d*c", &idade);
+    while(idade < 1){
+        printf("Idade:\n>>");
+        scanf("%d%*c", &idade);
         if(idade < 10) printf("Cadastro proibido para menores de 10 anos.\n");
     }
     do{
