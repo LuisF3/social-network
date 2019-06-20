@@ -62,7 +62,7 @@ void cadastrar(grafo *g){
     char *time;
 
     system("tput reset");
-    printf("<-Novo usuário->\n\n");
+    printf("<-----Novo usuário----->\n\n");
 
     while(idade < 1){
         printf("Idade:\n>>");

@@ -167,6 +167,11 @@ void grafoRemoverInicio(grafo *g){
     usuario *remover = g->cabeca->proximo;
     g->cabeca->proximo = remover->proximo;
     if(g->qtd_usuarios == 1) g->ultimo = NULL;
+    free(remover->nome);
+    free(remover->genero_filme);
+    free(remover->time);
+    listaApagar(remover->amizades);
+    listaApagar(remover->pedido_amizade);
     free(remover);
     g->qtd_usuarios--;
 }
@@ -249,11 +254,17 @@ void grafoBuscarTodosNomes(grafo *g, char *nome){
     if (!g || !nome) return;
     
     usuario *atual = g->cabeca->proximo;
+    char *atualLower;
+    char *nomeLower;
     lista *encontrados = listaCriar();
-    while(atual) {
-        if(strncmp(strToLower(atual->nome), strToLower(nome), strlen(nome) < strlen(atual->nome) ? strlen(nome) : strlen(atual->nome)) == 0 && strcmp(usuario_atual->nome, atual->nome) && !listaIsNaLista(usuario_atual->amizades, atual->id))
+        while(atual){
+        atualLower = strToLower(atual->nome);
+        nomeLower = strToLower(nome);
+        if(strncmp(atualLower, nomeLower, strlen(nome) < strlen(atual->nome) ? strlen(nome) : strlen(atual->nome)) == 0 && strcmp(usuario_atual->nome, atual->nome) && !listaIsNaLista(usuario_atual->amizades, atual->id))
             listaInserirFim(encontrados, atual->id, atual);
         atual = atual->proximo;
+        free(atualLower);
+        free(nomeLower);
     }
 
     int escolha;
@@ -327,7 +338,7 @@ void grafoAmizadesIndevidas(){
     }
 }
 
-int distanciaPorcentual(float latitude, float longitude, float latitude2, float longitude2){
+int distanciaPercentual(float latitude, float longitude, float latitude2, float longitude2){
     float lat = (latitude - latitude2) * (latitude - latitude2);
     float log = (longitude - longitude2) * (longitude - longitude2);
     
@@ -337,7 +348,7 @@ int distanciaPorcentual(float latitude, float longitude, float latitude2, float 
     return per;
 }
 
-int corPorcentual(float red, float blue, float green, float red2, float blue2, float green2){
+int corPercentual(float red, float blue, float green, float red2, float blue2, float green2){
     float redr = (red - red2) * (red - red2);
     float bluer = (blue - blue2) * (blue - blue2);
     float greenr = (green - green2) * (green - green2);
@@ -347,7 +358,6 @@ int corPorcentual(float red, float blue, float green, float red2, float blue2, f
     
     return per;
 }
-
 
 float verificadorAfinidade(usuario *usuario1, usuario *usuario2){
     if (!usuario1 || !usuario2) return -1;
@@ -453,17 +463,27 @@ bool busca_binaria_cidade(grafo *g, char *nome, char *estado, float *latitude, f
     int meio;
     int cmp;
 
+    char *cidadeLower = strToLower(nome);
+    char *atualLower;
+
     while(inicio <= fim){
         meio = (fim + inicio)/2;
-        cmp = strncmp(strToLower(nome), strToLower(g->todas_cidades[meio].nome), strlen(nome) < strlen(g->todas_cidades[meio].nome) ? strlen(nome) : strlen(g->todas_cidades[meio].nome));
+        atualLower = strToLower(g->todas_cidades[meio].nome);
+        cmp = strncmp(cidadeLower, atualLower, strlen(nome) < strlen(g->todas_cidades[meio].nome) ? strlen(nome) : strlen(g->todas_cidades[meio].nome));
         if(cmp == 0){
-            while(strncmp(strToLower(nome), strToLower(g->todas_cidades[meio].nome), strlen(nome) < strlen(g->todas_cidades[meio].nome) ? strlen(nome) : strlen(g->todas_cidades[meio].nome)) == 0 && meio >= 0)
+            while(strncmp(cidadeLower, atualLower, strlen(nome) < strlen(g->todas_cidades[meio].nome) ? strlen(nome) : strlen(g->todas_cidades[meio].nome)) == 0 && meio >= 0){
                 meio -= 1;
+                free(atualLower);
+                atualLower = strToLower(g->todas_cidades[meio].nome);
+            }
+            free(atualLower);
             meio += 1;
             while(true){
                 int i;
-                for(i = meio; strncmp(strToLower(nome), strToLower(g->todas_cidades[i].nome), strlen(nome) < strlen(g->todas_cidades[i].nome) ? strlen(nome) : strlen(g->todas_cidades[i].nome)) == 0 && i < sizeof(g->todas_cidades) / sizeof(cidade); i++)
+                for(i = meio; strncmp(cidadeLower, atualLower = strToLower(g->todas_cidades[i].nome), strlen(nome) < strlen(g->todas_cidades[i].nome) ? strlen(nome) : strlen(g->todas_cidades[i].nome)) == 0 && i < sizeof(g->todas_cidades) / sizeof(cidade); i++){
                     printf("%02d) %s, %s\n", i - meio + 1, g->todas_cidades[i].nome, g->todas_cidades[i].estado);
+                    free(atualLower);
+                 }
                 int selecao = -1;
                 printf("Selecione uma das cidades abaixo:\n>>");
                 scanf("%d%*c", &selecao);
@@ -475,13 +495,17 @@ bool busca_binaria_cidade(grafo *g, char *nome, char *estado, float *latitude, f
                 *latitude = g->todas_cidades[selecao + meio - 1].latitude;
                 *longitude = g->todas_cidades[selecao + meio - 1].longitude;
                 printf("Cidade %s selecionada com sucesso!\n", g->todas_cidades[selecao + meio - 1].nome);
+                free(cidadeLower);
+                free(atualLower);
                 return true;
             }
         }
         else if(cmp < 0) fim = meio - 1; 
         else inicio = meio + 1;
+        free(atualLower);
     }
     printf("Nenhuma cidade encontrada. Você quis dizer %s?\n",g->todas_cidades[meio].nome);
+    free(cidadeLower);
     return false;
 }
 
@@ -492,17 +516,27 @@ bool busca_binaria_cor(grafo *g, char *cor, float *red, float *green, float *blu
     int meio;
     int cmp;
 
+    char *corLower = strToLower(cor);
+    char *atualLower;
+
     while(inicio <= fim){
         meio = (fim + inicio)/2;
-        cmp = strncmp(strToLower(cor), strToLower(g->todas_cores[meio].nome), strlen(cor) < strlen(g->todas_cores[meio].nome) ? strlen(cor) : strlen(g->todas_cores[meio].nome));
+        atualLower = strToLower(g->todas_cores[meio].nome);
+        cmp = strncmp(corLower, atualLower, strlen(cor) < strlen(g->todas_cores[meio].nome) ? strlen(cor) : strlen(g->todas_cores[meio].nome));
         if(cmp == 0){
-            while(strncmp(strToLower(cor), strToLower(g->todas_cores[meio].nome), strlen(cor) < strlen(g->todas_cores[meio].nome) ? strlen(cor) : strlen(g->todas_cores[meio].nome)) == 0 && meio >= 0)
+            while(strncmp(corLower, atualLower, strlen(cor) < strlen(g->todas_cores[meio].nome) ? strlen(cor) : strlen(g->todas_cores[meio].nome)) == 0 && meio >= 0){
                 meio -= 1;
+                free(atualLower);
+                atualLower = strToLower(g->todas_cores[meio].nome);
+            }
+            free(atualLower);
             meio += 1;
             while(true){
                 int i;
-                for(i = meio; strncmp(strToLower(cor), strToLower(g->todas_cores[i].nome), strlen(cor) < strlen(g->todas_cores[i].nome) ? strlen(cor) : strlen(g->todas_cores[i].nome)) == 0 && i < sizeof(g->todas_cores) / sizeof(cidade); i++)
+                for(i = meio; strncmp(corLower, atualLower = strToLower(g->todas_cores[i].nome), strlen(cor) < strlen(g->todas_cores[i].nome) ? strlen(cor) : strlen(g->todas_cores[i].nome)) == 0 && i < sizeof(g->todas_cores) / sizeof(cidade); i++){
                     printf("%02d) %s\n", i - meio + 1, g->todas_cores[i].nome);
+                    free(atualLower);
+                }
                 int selecao = -1;
                 printf("Selecione uma das cores abaixo:\n>>");
                 scanf("%d%*c", &selecao);
@@ -514,13 +548,17 @@ bool busca_binaria_cor(grafo *g, char *cor, float *red, float *green, float *blu
                 *green = g->todas_cores[selecao + meio - 1].green;
                 *blue = g->todas_cores[selecao + meio - 1].blue;
                 printf("Cor %s selecionada com sucesso!\n", g->todas_cores[selecao + meio - 1].nome);
+                free(corLower);
+                free(atualLower);
                 return true;
             }
         }
         else if(cmp < 0) fim = meio - 1; 
         else inicio = meio + 1;
+        free(atualLower);
     }
     printf("Nenhuma cor encontrada. Você quis dizer %s?\n",g->todas_cores[meio].nome);
+    free(corLower);
     return false;
 }
 
