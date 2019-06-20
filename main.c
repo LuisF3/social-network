@@ -61,6 +61,9 @@ void cadastrar(grafo *g){
     char *genero_filme;
     char *time;
 
+    system("tput reset");
+    printf("<-Novo usuário->\n\n");
+
     while(idade < 1){
         printf("Idade:\n>>");
         scanf("%d%*c", &idade);
@@ -86,7 +89,10 @@ void cadastrar(grafo *g){
 
     if(debug) printf("/%s/\n/%s/\n/%s/\n/%s/\n/%s/\n", nome, cidade, genero_filme, cor_favorita, time);
     grafoInserirFim(g, idade, nome, cidade, estado, latitude, longitude, genero_filme, cor_favorita, red, green, blue, time);
-    printf("Cadastrado com sucesso\n");
+    printf("Cadastrado com sucesso. Pressione enter para retornar ao menu principal\n");
+    scanf("%*c");
+    system("tput reset");
+    setbuf(stdin,NULL);
 
     free(nome);
     free(genero_filme);
@@ -141,6 +147,7 @@ void titulo(){
 void usuario_home_page(grafo *g){
     if(!g) return;
     char opcao, *nome;
+    system("tput reset");
     while(true) {
         printf("+-------------------------------+\n");
         printf("|       Página do usuário       |\n");
