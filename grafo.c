@@ -511,14 +511,14 @@ bool busca_binaria_cidade(grafo *g, char *nome, char *estado, float *latitude, f
 
 bool busca_binaria_cor(grafo *g, char *nome, float *red, float *green, float *blue){
     int inicio = 0;
-    int fim = sizeof(g->todas_cores) / sizeof(cor);
+    int fim = (sizeof(g->todas_cores) / sizeof(cor));
     int meio;
     int cmp;
 
     char *corLower = strToLower(nome);
     char *atualLower;
 
-    while(inicio <= fim){
+    while(inicio < fim){
         meio = (fim + inicio)/2;
         atualLower = strToLower(g->todas_cores[meio].nome);
         cmp = strncmp(corLower, atualLower, strlen(nome) < strlen(g->todas_cores[meio].nome) ? strlen(nome) : strlen(g->todas_cores[meio].nome));
