@@ -354,7 +354,7 @@ float corPercentual(usuario *user1, usuario *user2){
     float bluer = (user1->cor_info.blue - user2->cor_info.blue) * (user1->cor_info.blue - user2->cor_info.blue);
     float greenr =  (user1->cor_info.green - user2->cor_info.green) * (user1->cor_info.green - user2->cor_info.green);
     
-
+    //calculando uma distancias entre as cores vermelho, azul e verde
     float per = (redr + bluer + greenr) / (256 * 256 * 3);
     //amortização de 40%
     per = (1.0 - per) * 0.4;
@@ -362,22 +362,28 @@ float corPercentual(usuario *user1, usuario *user2){
 }
 
 float verificadorAfinidade(usuario *usuario1, usuario *usuario2){
-    if (!usuario1 || !usuario2) return -1;
-    //VERIFICAR AMIZADES EM COMUM
+    if (!usuario1 || !usuario2) return -1;  
     float afinidadeTotal = 100.0;
-
+    
     afinidadeTotal *= distanciaPercentual(usuario1, usuario2);
     afinidadeTotal *= corPercentual(usuario1, usuario2);
    
-    
+    //compara os genero do filme
     if (strcmp(strToLower(usuario1->genero_filme), strToLower(usuario2->genero_filme)) == 0)
         afinidadeTotal *= 1.2;
+   
+   
+   
+   
+   
+   
+   
+   
     if (strcmp(strToLower(usuario1->time), strToLower(usuario2->time)) != 0)
         afinidadeTotal *= 0.6;
     int deltaIdade = usuario1->idade - usuario2->idade;
     if (deltaIdade > 8)
         afinidadeTotal *= 0.8;
-
     if (afinidadeTotal >= 100)
         return 100;
     return afinidadeTotal;
@@ -389,8 +395,11 @@ void grafoRecomendacoes(){
         return;
     }
     int selecao = -1;
+
     lista *recomendacoes = recomendacaoAmigos();
-    
+
+    // pergunta se o usuário quer remover algum amigo, enquanto não for selecionado 0, e a lista não estiver vazia
+    // continuamos a mostar a lista de amizades
     while(selecao) {
         if (listaVazia(recomendacoes)){
             printf("Nenhuma recomendação encontrada. Tente adicionar mais alguns amigos!\n");
@@ -400,8 +409,7 @@ void grafoRecomendacoes(){
         printf("Digite o número do usuário que deseja adicionar ou 0 para continuar\n>>");
         scanf("%d%*c", &selecao);
         if(selecao <= 0) break;
-        if (selecao <= 15)
-        {
+        if (selecao <= 15) {
             usuario *novo_amigo = listaRemoverBusca_Posicao(recomendacoes, selecao);
             listaInserirOrdenado(novo_amigo->pedido_amizade, usuario_atual->id, usuario_atual);
             printf("Pedido de amizade enviado a %s com sucesso.\n", novo_amigo->nome);

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "grafo.h"
 
 int debug = 0;
@@ -83,12 +84,20 @@ void cadastrar(grafo *g){
     do{
         printf("Cor favorita:\n>>");
         scanf("%m[^\n\r]%*c", &cor_favorita);
-    }while (!busca_binaria_cor(g, cor_favorita, &red, &green, &blue));
+    }while (! busca_binaria_cor(g, cor_favorita, &red, &green, &blue));
     printf("Time de futebol:\n>>");
     scanf("%m[^\n\r]%*c", &time);
 
     if(debug) printf("/%s/\n/%s/\n/%s/\n/%s/\n/%s/\n", nome, cidade, genero_filme, cor_favorita, time);
+    
+    FILE *fp = fopen("dados.csv", "a");
+    
+    fprintf(fp, "%d,%s,%s,%s,%f,%f,%s,%s,%f,%f,%f,%s\n", idade, nome, cidade, estado, latitude, longitude, genero_filme, cor_favorita, red, blue, green, time);
+   
+    
     grafoInserirFim(g, idade, nome, cidade, estado, latitude, longitude, genero_filme, cor_favorita, red, green, blue, time);
+    
+
     printf("Cadastrado com sucesso. Pressione enter para retornar ao menu principal\n");
     scanf("%*c");
     system("tput reset");
@@ -246,7 +255,7 @@ int main(int argc, char const *argv[]){
     titulo();
     grafo *g = grafoCriar();
     arquivo_ler(g);
-    if(opcao) grafoAdicionarTodos(g);
+    if(opcao != '0') grafoAdicionarTodos(g);
     home_page(g);
     grafoApagar(g);
 
