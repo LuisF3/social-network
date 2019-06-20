@@ -227,12 +227,19 @@ void grafoListarSolicitacoes(grafo *g){
                 printf("Digite o número do usuário que deseja recusar ou 0 para continuar\n>>");
                 scanf("%d%*c", &escolha);
                 if(escolha <= 0) return;
-                listaRemoverBusca_Posicao(usuario_atual->pedido_amizade, escolha);
+                if (escolha <= listaTamanho(usuario_atual->pedido_amizade))
+                    listaRemoverBusca_Posicao(usuario_atual->pedido_amizade, escolha);   
+                else
+                    printf("Opção invalida\n");
             }
         }
-        usuario *novo_amigo = listaRemoverBusca_Posicao(usuario_atual->pedido_amizade, escolha);
-        if(listaInserirOrdenado(usuario_atual->amizades, novo_amigo->id, novo_amigo) && listaInserirOrdenado(novo_amigo->amizades, usuario_atual->id, usuario_atual))
-            printf("Adicionado com sucesso!\n");
+        if (escolha <= listaTamanho(usuario_atual->pedido_amizade))
+        {
+            usuario *novo_amigo = listaRemoverBusca_Posicao(usuario_atual->pedido_amizade, escolha);
+            if (listaInserirOrdenado(usuario_atual->amizades, novo_amigo->id, novo_amigo) && listaInserirOrdenado(novo_amigo->amizades, usuario_atual->id, usuario_atual))
+                printf("Adicionado com sucesso!\n");
+        }else
+            printf("Opção invalida\n");
     }
 
     return;
@@ -308,10 +315,15 @@ void grafoAmizadesIndevidas(){
         printf("Digite o número do usuário que deseja remover ou 0 para continuar\n>>");
         scanf("%d%*c", &selecao);
         if(selecao <= 0) break;
-        usuario *novo_amigo = listaRemoverBusca_Posicao(amizadesFracas, selecao);
-        listaRemoverBusca_id(usuario_atual->amizades, novo_amigo->id);
-        listaRemoverBusca_id(novo_amigo->amizades, usuario_atual->id);
-        printf("%s Removido com sucesso.\n", novo_amigo->nome);
+        if (selecao <= listaTamanho(amizadesFracas))
+        {
+            usuario *novo_amigo = listaRemoverBusca_Posicao(amizadesFracas, selecao);
+            listaRemoverBusca_id(usuario_atual->amizades, novo_amigo->id);
+            listaRemoverBusca_id(novo_amigo->amizades, usuario_atual->id);
+            printf("%s Removido com sucesso.\n", novo_amigo->nome);
+        }else{
+            printf("Opção invalida\n");
+        }
     }
 }
 
@@ -376,9 +388,14 @@ void grafoRecomendacoes(){
         printf("Digite o número do usuário que deseja adicionar ou 0 para continuar\n>>");
         scanf("%d%*c", &selecao);
         if(selecao <= 0) break;
-        usuario *novo_amigo = listaRemoverBusca_Posicao(recomendacoes, selecao);
-        listaInserirOrdenado(novo_amigo->pedido_amizade, usuario_atual->id, usuario_atual);
-        printf("Pedido de amizade enviado a %s com sucesso.\n", novo_amigo->nome);
+        if (selecao <= 15)
+        {
+            usuario *novo_amigo = listaRemoverBusca_Posicao(recomendacoes, selecao);
+            listaInserirOrdenado(novo_amigo->pedido_amizade, usuario_atual->id, usuario_atual);
+            printf("Pedido de amizade enviado a %s com sucesso.\n", novo_amigo->nome);
+        }else{
+            printf("Opção invalida\n");
+        }
     }
 }
 
