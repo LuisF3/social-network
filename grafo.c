@@ -338,25 +338,27 @@ void grafoAmizadesIndevidas(){
     }
 }
 
-int distanciaPercentual(float latitude, float longitude, float latitude2, float longitude2){
-    float lat = (latitude - latitude2) * (latitude - latitude2);
-    float log = (longitude - longitude2) * (longitude - longitude2);
+float distanciaPercentual(usuario *usuario1, usuario *usuario2){
+    float lat = (usuario1->cidade_info.latitude - usuario2->cidade_info.latitude) * (usuario1->cidade_info.latitude - usuario2->cidade_info.latitude);
+    float log = (usuario1->cidade_info.longitude - usuario2->cidade_info.longitude) * (usuario1->cidade_info.longitude - usuario2->cidade_info.longitude);
     
 
     float per = (lat + log) / ((46 * 46) + (79 * 79));
-    
-    return per;
+    //amortização de 50%
+    per = per *0.5;
+    return (1.0 - per);
 }
 
-int corPercentual(float red, float blue, float green, float red2, float blue2, float green2){
-    float redr = (red - red2) * (red - red2);
-    float bluer = (blue - blue2) * (blue - blue2);
-    float greenr = (green - green2) * (green - green2);
+float corPercentual(usuario *user1, usuario *user2){
+    float redr = (user1->cor_info.red - user2->cor_info.red) * (user1->cor_info.red - user2->cor_info.red);
+    float bluer = (user1->cor_info.blue - user2->cor_info.blue) * (user1->cor_info.blue - user2->cor_info.blue);
+    float greenr =  (user1->cor_info.green - user2->cor_info.green) * (user1->cor_info.green - user2->cor_info.green);
     
 
     float per = (redr + bluer + greenr) / (256 * 256 * 3);
-    
-    return per;
+    //amortização de 40%
+    per = (1.0 - per) * 0.4;
+    return 1.0 + per;
 }
 
 float verificadorAfinidade(usuario *usuario1, usuario *usuario2){
@@ -364,8 +366,8 @@ float verificadorAfinidade(usuario *usuario1, usuario *usuario2){
     //VERIFICAR AMIZADES EM COMUM
     float afinidadeTotal = 100.0;
 
-    // if (strcmp(strToLower(usuario1->cidade), strToLower(usuario2->cidade)) != 0)
-    //     afinidadeTotal *= 0.8;
+    afinidadeTotal *= distanciaPercentual(usuario1, usuario2);
+    afinidadeTotal *= corPercentual(usuario1, usuario2);
    
     
     if (strcmp(strToLower(usuario1->genero_filme), strToLower(usuario2->genero_filme)) == 0)
@@ -378,7 +380,7 @@ float verificadorAfinidade(usuario *usuario1, usuario *usuario2){
 
     if (afinidadeTotal >= 100)
         return 100;
-    return 100 - usuario2->idade;
+    return afinidadeTotal;
 }
 
 void grafoRecomendacoes(){
