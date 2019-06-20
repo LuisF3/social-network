@@ -310,6 +310,7 @@ void grafoAmizadesIndevidas(){
         if(selecao <= 0) break;
         usuario *novo_amigo = listaRemoverBusca_Posicao(amizadesFracas, selecao);
         listaRemoverBusca_id(usuario_atual->amizades, novo_amigo->id);
+        listaRemoverBusca_id(novo_amigo->amizades, usuario_atual->id);
         printf("%s Removido com sucesso.\n", novo_amigo->nome);
     }
 }
