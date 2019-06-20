@@ -485,7 +485,7 @@ bool busca_binaria_cidade(grafo *g, char *nome, char *estado, float *latitude, f
                     free(atualLower);
                  }
                 int selecao = -1;
-                printf("Selecione uma das cidades abaixo:\n>>");
+                printf("Selecione uma das cidades acima:\n>>");
                 scanf("%d%*c", &selecao);
                 if(selecao <= 0 || selecao > i - meio){
                     printf("Valor inválido\n");
@@ -509,22 +509,21 @@ bool busca_binaria_cidade(grafo *g, char *nome, char *estado, float *latitude, f
     return false;
 }
 
-bool busca_binaria_cor(grafo *g, char *cor, float *red, float *green, float *blue){
+bool busca_binaria_cor(grafo *g, char *nome, float *red, float *green, float *blue){
     int inicio = 0;
     int fim = sizeof(g->todas_cores) / sizeof(cor);
-    fim /= 10;
     int meio;
     int cmp;
 
-    char *corLower = strToLower(cor);
+    char *corLower = strToLower(nome);
     char *atualLower;
 
     while(inicio <= fim){
         meio = (fim + inicio)/2;
         atualLower = strToLower(g->todas_cores[meio].nome);
-        cmp = strncmp(corLower, atualLower, strlen(cor) < strlen(g->todas_cores[meio].nome) ? strlen(cor) : strlen(g->todas_cores[meio].nome));
+        cmp = strncmp(corLower, atualLower, strlen(nome) < strlen(g->todas_cores[meio].nome) ? strlen(nome) : strlen(g->todas_cores[meio].nome));
         if(cmp == 0){
-            while(strncmp(corLower, atualLower, strlen(cor) < strlen(g->todas_cores[meio].nome) ? strlen(cor) : strlen(g->todas_cores[meio].nome)) == 0 && meio >= 0){
+            while(strncmp(corLower, atualLower, strlen(nome) < strlen(g->todas_cores[meio].nome) ? strlen(nome) : strlen(g->todas_cores[meio].nome)) == 0 && meio >= 0){
                 meio -= 1;
                 free(atualLower);
                 atualLower = strToLower(g->todas_cores[meio].nome);
@@ -533,12 +532,12 @@ bool busca_binaria_cor(grafo *g, char *cor, float *red, float *green, float *blu
             meio += 1;
             while(true){
                 int i;
-                for(i = meio; strncmp(corLower, atualLower = strToLower(g->todas_cores[i].nome), strlen(cor) < strlen(g->todas_cores[i].nome) ? strlen(cor) : strlen(g->todas_cores[i].nome)) == 0 && i < sizeof(g->todas_cores) / sizeof(cidade); i++){
+                for(i = meio; strncmp(corLower, atualLower = strToLower(g->todas_cores[i].nome), strlen(nome) < strlen(g->todas_cores[i].nome) ? strlen(nome) : strlen(g->todas_cores[i].nome)) == 0 && i < sizeof(g->todas_cores) / sizeof(cor); i++){
                     printf("%02d) %s\n", i - meio + 1, g->todas_cores[i].nome);
                     free(atualLower);
                 }
                 int selecao = -1;
-                printf("Selecione uma das cores abaixo:\n>>");
+                printf("Selecione uma das cores acima:\n>>");
                 scanf("%d%*c", &selecao);
                 if(selecao <= 0 || selecao > i - meio){
                     printf("Valor inválido\n");
