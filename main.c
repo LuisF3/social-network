@@ -82,7 +82,7 @@ void cadastrar(grafo *g){
     printf("Gênero de filme favorito:\n>>");
     scanf("%m[^\n\r]%*c", &genero_filme);
     do{
-        printf("Cor favorita:\n>>");
+        printf("Cor favorita (em inglês):\n>>");
         scanf("%m[^\n\r]%*c", &cor_favorita);
     }while (! busca_binaria_cor(g, cor_favorita, &red, &green, &blue));
     printf("Time de futebol:\n>>");
@@ -92,7 +92,8 @@ void cadastrar(grafo *g){
     
     FILE *fp = fopen("dados.csv", "a");
     
-    fprintf(fp, "%d,%s,%s,%s,%f,%f,%s,%s,%f,%f,%f,%s\n", idade, nome, cidade, estado, latitude, longitude, genero_filme, cor_favorita, red, blue, green, time);
+
+    fprintf(fp, "\n%d,%s,%s,%s,%f,%f,%s,%s,%f,%f,%f,%s", idade, nome, cidade, estado, latitude, longitude, genero_filme, cor_favorita, red, blue, green, time);
    
     
     grafoInserirFim(g, idade, nome, cidade, estado, latitude, longitude, genero_filme, cor_favorita, red, green, blue, time);

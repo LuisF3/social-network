@@ -1,7 +1,7 @@
 Idade,Nome,Cidade,Estado,Longitude,Latitude,Filme,Cor,Red,Green,Blue,Time
 19,Luis Felipe,Pará de Minas,MG,-19.86,-44.608333,Aventura,Light Apricot,253,213,177,Atletico
 20,Claudio Possani,São Paulo,SP,-23.5561782,-46.6375468,Terror,Mint,62,180,137,Sao Raimundo
-18,Victor Akihito,São Miguel dos Campos,AL,-9.78301,-36.097142,Romance,Mint,62,180,137,Brasiliense
+18,Victor Akihito,Brasília,DF,-47.882748,-15.794188,Romance,Blue,0.000000,255.000000,0.000000,Nenhum
 19,Henrique Tadashi,Afogados da Ingazeira,PE,-7.743121,-37.630990999999995,Aventura,Shadow,138,121,93,America
 34,Cristina Dutra Ciferri,Alagoinhas,BA,0.0,0.0,Terror,Mint,62,180,137,Sao Carlense
 30,Tiago Pardo,Itaguari,GO,-15.9180439,-49.6070841,Acao,Shadow,138,121,93,Palmeiras
@@ -21,7 +21,7 @@ Idade,Nome,Cidade,Estado,Longitude,Latitude,Filme,Cor,Red,Green,Blue,Time
 14,Seu Amigo Imaginario,Adamantina,SP,-21.682012,-51.073695,Romance,Black,0,0,0,Easter Eggs
 54,Keanu Reeves,Passo do Sobrado,RS,-29.748040999999997,-52.274758,Ação,Black,0,0,0,You Are Breathtaking
 47,Elon Musk,São Paulo,SP,-23.5561782,-46.6375468,Comédia,Light Apricot,253,213,177,XSpace 
-23,Giovana Guedes,São Miguel da Baixa Grande,PI,-5.856457,-42.193422999999996,Romance,Black,0,0,0,Nenhum
+38,Giovana Guedes,São Miguel da Baixa Grande,PI,-5.856457,-42.193422999999996,Romance,Black,0,0,0,Nenhum
 42,Green Gaus Stokes,Osasco,SP,-23.5325,-46.7918,Matemática,Red,255,0,0,Nenhum
 40,Alan Turin,São Paulo,SP,-23.5561782,-46.6375468,Computacao,Red,255,0,0,Nenhum
 49,Dijkstra,Palmeira,SC,-27.583013,-50.157717,Drama,Light Apricot,253,213,177,Nenhum
@@ -29,3 +29,6 @@ Idade,Nome,Cidade,Estado,Longitude,Latitude,Filme,Cor,Red,Green,Blue,Time
 10,Ash Ketchum,Potirendaba,SP,-21.042789000000006,-49.381509,Animação,Teal Blue,54,117,136,Nenhum
 18,Red,Potirendaba,SP,-21.042789000000006,-49.381509,Animação,Red,255,0,0,Nenhum
 21,Blue,Potirendaba,SP,-21.042789000000006,-49.381509,Animação,Blue,0,0,255,Nenhum
+13,Marina Guedes,Brasília,DF,-47.882748,-15.794188,Romance,Blue,0.000000,255.000000,0.000000,Nenhum
+18,Ricardo Millos,Brasília,DF,-47.882748,-15.794188,Romance,Blue,0.000000,255.000000,0.000000,Nenhum
+35,Terry Crews,São Paulo,SP,-46.637547,-23.556179,Comedia,Blue,0.000000,255.000000,0.000000,São Paulo

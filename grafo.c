@@ -344,8 +344,8 @@ float distanciaPercentual(usuario *usuario1, usuario *usuario2){
     
 
     float per = (lat + log) / ((46 * 46) + (79 * 79));
-    //amortização de 50%
-    per = per *0.5;
+    //amortização de 65%
+    per = per *0.65;
     return (1.0 - per);
 }
 
@@ -371,19 +371,16 @@ float verificadorAfinidade(usuario *usuario1, usuario *usuario2){
     //compara os genero do filme
     if (strcmp(strToLower(usuario1->genero_filme), strToLower(usuario2->genero_filme)) == 0)
         afinidadeTotal *= 1.2;
-   
-   
-   
-   
-   
-   
-   
-   
     if (strcmp(strToLower(usuario1->time), strToLower(usuario2->time)) != 0)
         afinidadeTotal *= 0.6;
     int deltaIdade = usuario1->idade - usuario2->idade;
+    if (deltaIdade < 0)
+        deltaIdade = -deltaIdade;
     if (deltaIdade > 8)
         afinidadeTotal *= 0.8;
+    if (deltaIdade > 15)
+        afinidadeTotal *= 0.6;
+
     if (afinidadeTotal >= 100)
         return 100;
     return afinidadeTotal;
@@ -504,6 +501,7 @@ bool busca_binaria_cidade(grafo *g, char *nome, char *estado, float *latitude, f
                 strcpy(estado,g->todas_cidades[selecao + meio - 1].estado);
                 *latitude = g->todas_cidades[selecao + meio - 1].latitude;
                 *longitude = g->todas_cidades[selecao + meio - 1].longitude;
+                strcpy(nome, g->todas_cidades[selecao + meio - 1].nome);
                 printf("Cidade %s selecionada com sucesso!\n", g->todas_cidades[selecao + meio - 1].nome);
                 free(cidadeLower);
                 free(atualLower);
@@ -556,6 +554,7 @@ bool busca_binaria_cor(grafo *g, char *nome, float *red, float *green, float *bl
                 *red = g->todas_cores[selecao + meio - 1].red;
                 *green = g->todas_cores[selecao + meio - 1].green;
                 *blue = g->todas_cores[selecao + meio - 1].blue;
+                strcpy(nome, g->todas_cores[selecao + meio - 1].nome);
                 printf("Cor %s selecionada com sucesso!\n", g->todas_cores[selecao + meio - 1].nome);
                 free(corLower);
                 free(atualLower);
