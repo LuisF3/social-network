@@ -235,7 +235,7 @@ void grafoListarSolicitacoes(grafo *g){
                 if (escolha <= listaTamanho(usuario_atual->pedido_amizade))
                     listaRemoverBusca_Posicao(usuario_atual->pedido_amizade, escolha);   
                 else
-                    printf("Opção invalida\n");
+                    printf("Opção inválida\n");
             }
         }
         if (escolha <= listaTamanho(usuario_atual->pedido_amizade))
@@ -417,14 +417,14 @@ void grafoRecomendacoes(){
             listaInserirOrdenado(novo_amigo->pedido_amizade, usuario_atual->id, usuario_atual);
             printf("Pedido de amizade enviado a %s com sucesso.\n", novo_amigo->nome);
         }else{
-            printf("Opção invalida\n");
+            printf("Opção inválida\n");
         }
     }
 }
 
 void grafoEncontrarNamorado(){
     if(listaVazia(usuario_atual->amizades)) {
-        printf("Adicione alguns amigos antes de tentar essa funcionalidade!");
+        printf("Adicione alguns amigos antes de tentar essa funcionalidade!\n");
         return;
     }
     int selecao = -1;
