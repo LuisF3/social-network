@@ -19,7 +19,7 @@ lista *recomendacaoAmigos();
 */
 char *strToLower(char *str){
     char *copia = malloc(strlen(str) * sizeof(char));
-    for (int i = 0; i < strlen(str); i++)
+    for (int i = 0; i <= strlen(str); i++)
         copia[i] = tolower(str[i]);
     return copia;
 }
@@ -367,11 +367,14 @@ float verificadorAfinidade(usuario *usuario1, usuario *usuario2){
     
     afinidadeTotal *= distanciaPercentual(usuario1, usuario2);
     afinidadeTotal *= corPercentual(usuario1, usuario2);
-   
+
+    char *user1Genero = strToLower(usuario1->genero_filme) , *user2Genero = strToLower(usuario2->genero_filme);
+    char *user1Time = strToLower(usuario1->time), *user2Time = strToLower(usuario2->time);
+
     //compara os genero do filme
-    if (strcmp(strToLower(usuario1->genero_filme), strToLower(usuario2->genero_filme)) == 0)
+    if (strcmp(user1Genero, user2Genero) == 0)
         afinidadeTotal *= 1.2;
-    if (strcmp(strToLower(usuario1->time), strToLower(usuario2->time)) != 0)
+    if (strcmp(user1Time, user2Time) != 0)
         afinidadeTotal *= 0.6;
     int deltaIdade = usuario1->idade - usuario2->idade;
     if (deltaIdade < 0)
@@ -381,6 +384,10 @@ float verificadorAfinidade(usuario *usuario1, usuario *usuario2){
     if (deltaIdade > 15)
         afinidadeTotal *= 0.6;
 
+    free(user1Genero);
+    free(user2Genero);
+    free(user1Time);
+    free(user2Time);
     if (afinidadeTotal >= 100)
         return 100;
     return afinidadeTotal;
@@ -423,25 +430,24 @@ void grafoEncontrarNamorado(){
     }
     int selecao = -1;
     lista *recomendacoes = recomendacaoNamorado();
-
-    if (listaVazia(recomendacoes)){
+    usuario *novo_amigo = listaRemoverInicio(recomendacoes);
+    if (listaVazia(recomendacoes) || verificadorAfinidade(usuario_atual, novo_amigo) < 80){
         printf("Nenhum(a) namorado(a) encontrado(a). Tente adicionar mais alguns amigos!\n");
         return;
     }
     listaPrintarAfinidade(recomendacoes, 1, 80);
-    if (listaIsNaLista(usuario_atual->amizades, listaRemoverInicio(recomendacoes)->id)) {
+    
+    if (listaIsNaLista(usuario_atual->amizades, novo_amigo->id)) {
         printf("O namorado ideal já é seu amigo\n");
         return;
     }
     else
         printf("Digite 1 para mandar uma solicitação de amizade para o seu possível namorado! (ou 0 para continuar)\n>>");
-
     scanf("%d%*c", &selecao);
     if(selecao != 1) return;
-    usuario *novo_amigo = listaRemoverBusca_Posicao(recomendacoes, selecao);
     listaInserirOrdenado(novo_amigo->pedido_amizade, usuario_atual->id, usuario_atual);
     printf("Pedido de amizade enviado a %s com sucesso.\n", novo_amigo->nome);
-
+    
     return;
 }
 
@@ -843,7 +849,7 @@ lista *recomendacaoNamorado(){
         while (it) {
             if (!vis[it->amigo->id]) {
                 listaInserirFim(queue, it->amigo->id, it->amigo);
-                if (usuario_atual->id != it->amigo->id && !listaIsNaLista(it->amigo->pedido_amizade, usuario_atual->id))
+                if (usuario_atual->id != it->amigo->id && !listaIsNaLista(it->amigo->pedido_amizade, usuario_atual->id) && !listaIsNaLista(usuario_atual->pedido_amizade, it->id))
                     listaInserirOrdenado(recomendacoes, -1 * verificadorAfinidade(usuario_atual, it->amigo), it->amigo);
             }
             vis[it->amigo->id] = true;
