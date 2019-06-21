@@ -343,9 +343,9 @@ float distanciaPercentual(usuario *usuario1, usuario *usuario2){
     float log = (usuario1->cidade_info.longitude - usuario2->cidade_info.longitude) * (usuario1->cidade_info.longitude - usuario2->cidade_info.longitude);
     
 
-    float per = (lat + log) / ((46 * 46) + (79 * 79));
-    //amortização de 65%
-    per = per *0.65;
+    float per = (lat + log) / ((37 * 37) + (38 * 38));
+    //amortização de 80%
+    per = per * 0.8;
     return (1.0 - per);
 }
 
@@ -365,8 +365,8 @@ float verificadorAfinidade(usuario *usuario1, usuario *usuario2){
     if (!usuario1 || !usuario2) return -1;  
     float afinidadeTotal = 100.0;
     
-    afinidadeTotal *= distanciaPercentual(usuario1, usuario2);
-    afinidadeTotal *= corPercentual(usuario1, usuario2);
+    
+    
 
     char *user1Genero = strToLower(usuario1->genero_filme) , *user2Genero = strToLower(usuario2->genero_filme);
     char *user1Time = strToLower(usuario1->time), *user2Time = strToLower(usuario2->time);
@@ -374,6 +374,8 @@ float verificadorAfinidade(usuario *usuario1, usuario *usuario2){
     //compara os genero do filme
     if (strcmp(user1Genero, user2Genero) == 0)
         afinidadeTotal *= 1.2;
+    afinidadeTotal *= corPercentual(usuario1, usuario2);
+    afinidadeTotal *= distanciaPercentual(usuario1, usuario2);
     if (strcmp(user1Time, user2Time) != 0)
         afinidadeTotal *= 0.6;
     int deltaIdade = usuario1->idade - usuario2->idade;
@@ -384,10 +386,7 @@ float verificadorAfinidade(usuario *usuario1, usuario *usuario2){
     if (deltaIdade > 15)
         afinidadeTotal *= 0.6;
 
-    free(user1Genero);
-    free(user2Genero);
-    free(user1Time);
-    free(user2Time);
+    
     if (afinidadeTotal >= 100)
         return 100;
     return afinidadeTotal;
@@ -430,12 +429,13 @@ void grafoEncontrarNamorado(){
     }
     int selecao = -1;
     lista *recomendacoes = recomendacaoNamorado();
+    listaPrintarAfinidade(recomendacoes, 1, 80);
     usuario *novo_amigo = listaRemoverInicio(recomendacoes);
     if (listaVazia(recomendacoes) || verificadorAfinidade(usuario_atual, novo_amigo) < 80){
         printf("Nenhum(a) namorado(a) encontrado(a). Tente adicionar mais alguns amigos!\n");
         return;
     }
-    listaPrintarAfinidade(recomendacoes, 1, 80);
+    
     
     if (listaIsNaLista(usuario_atual->amizades, novo_amigo->id)) {
         printf("O namorado ideal já é seu amigo\n");
