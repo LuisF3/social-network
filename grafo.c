@@ -307,9 +307,13 @@ void grafoRemoverAmizades(){
         printf("Digite o número do usuário que deseja remover ou 0 para continuar\n>>");
         scanf("%d%*c", &selecao);
         if(selecao <= 0) break;
-        usuario *novo_amigo = listaRemoverBusca_Posicao(usuario_atual->amizades, selecao);
-        listaRemoverBusca_id(novo_amigo->amizades, usuario_atual->id);
-        printf("%s removido com sucesso.\n", novo_amigo->nome);
+        if (selecao <= listaTamanho(usuario_atual->amizades))
+        {
+            usuario *novo_amigo = listaRemoverBusca_Posicao(usuario_atual->amizades, selecao);
+            listaRemoverBusca_id(novo_amigo->amizades, usuario_atual->id);
+            printf("%s removido com sucesso.\n", novo_amigo->nome);
+        }else
+            printf("entrada invalida\n");   
     }
 }
 
